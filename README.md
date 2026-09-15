@@ -35,6 +35,10 @@ npm install
 npm run dev
 ```
 
+## Agent operating procedure
+
+For an end-to-end customer build, follow [`docs/site-build-sop.md`](docs/site-build-sop.md). It connects material intake, template selection, project creation, content implementation, verification and handoff. Each generated project also contains a self-contained `skills/company-website` workflow so an external Agent can continue without access to this catalog.
+
 Template selection happens once, during initialization. Moving an already customized site to another template is a migration, not a runtime theme switch.
 
 ## Licensing note

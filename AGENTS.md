@@ -9,6 +9,10 @@ This repository contains three independent Astro + Tailwind website starters und
 3. For template code, also read that template's `AGENTS.md`.
 4. Keep the shared content contract and route structure compatible across all three templates.
 
+## Customer website workflow
+
+When the request is to build a company website from customer materials, read `docs/site-build-sop.md` before creating or editing a customer project. Complete intake and template selection in the catalog, then continue from the generated project's `skills/company-website/SKILL.md`. Do not stop after copying a template when the user asked for a finished MVP.
+
 ## Catalog rules
 
 - Template selection occurs only in `scripts/create-site.mjs` by copying one complete starter.

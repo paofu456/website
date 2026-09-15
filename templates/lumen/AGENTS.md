@@ -10,6 +10,7 @@ This repository is a front-end starter. You are expected to edit Astro pages, co
 2. Inspect `site.config.ts`, `src/data/company.json`, and existing product content.
 3. Inspect Git status and preserve unrelated or uncommitted user changes.
 4. Treat everything in `materials/` and `notes/` as private input, not publishable website content.
+5. For a first customer build or a scoped site change, read `skills/company-website/SKILL.md` and the reference it selects before editing.
 
 ## Sources of truth
 

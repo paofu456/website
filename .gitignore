@@ -4,6 +4,8 @@ dist/
 **/dist/
 .astro/
 **/.astro/
+.tmp/
+**/.tmp/
 .DS_Store
 *.log
 
