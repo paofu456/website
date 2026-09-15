@@ -11,7 +11,7 @@ This repository contains three independent Astro + Tailwind website starters und
 
 ## Customer website workflow
 
-When the request is to build a company website from customer materials, read `docs/site-build-sop.md` before creating or editing a customer project. Complete intake and template selection in the catalog, then continue from the generated project's `skills/company-website/SKILL.md`. Do not stop after copying a template when the user asked for a finished MVP.
+When the request is to build a company website from customer materials, read `docs/site-build-sop.md` before creating or editing a customer project. A remote Agent must first fork and clone the catalog at an approved commit; a local Agent may use the existing checkout. Complete intake and template selection in the catalog, then continue from the generated project's `skills/company-website/SKILL.md`. Do not stop after copying a template when the user asked for a finished MVP.
 
 ## Catalog rules
 

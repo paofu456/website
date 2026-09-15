@@ -39,6 +39,8 @@ npm run dev
 
 For an end-to-end customer build, follow [`docs/site-build-sop.md`](docs/site-build-sop.md). It connects material intake, template selection, project creation, content implementation, verification and handoff. Each generated project also contains a self-contained `skills/company-website` workflow so an external Agent can continue without access to this catalog.
 
+On a remote Agent server, first fork this catalog in the Git provider and clone that fork to the server. The fork is the Agent's maintainable copy of the catalog; the selected customer website is then generated into its own directory and pushed to a separate customer repository. See the SOP for the exact repository boundaries.
+
 Template selection happens once, during initialization. Moving an already customized site to another template is a migration, not a runtime theme switch.
 
 ## Licensing note

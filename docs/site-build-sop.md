@@ -1,6 +1,6 @@
 # 企业独立站构建 SOP（Agent 版）
 
-版本 v1 · 2026-09-15
+版本 v1.1 · 2026-09-15
 
 适用场景：用户提供企业资料，Agent 使用本仓库的 Astro + Tailwind 基座，为一个客户创建独立的企业网站 MVP。
 
@@ -28,6 +28,9 @@
 ## 2. 整体流程
 
 ```text
+服务器 Agent：Fork 基座仓库 → Clone 到服务器 → 固定版本
+本地 Agent：使用已有基座 checkout
+  ↓
 接收资料
   ↓
 资料消化与事实分级
@@ -95,7 +98,65 @@ delivery gate + Git 基线 + 交付说明
 
 ---
 
-## 4. 阶段 B：选择模板并创建客户项目
+## 4. 阶段 B：服务器获取基座、选择模板并创建客户项目
+
+### 两种入口
+
+| 运行环境 | 获取基座的方式 |
+|---|---|
+| Agent 与用户共享本地工作区，基座已经存在 | 直接读取现有 checkout，不重复 Fork |
+| Agent 运行在独立服务器或云端，无法访问用户本地目录 | 先在 Git 托管平台 Fork 基座，再把 Fork Clone 到服务器 |
+
+服务器场景中 Fork 是标准步骤，但 Fork 本身不会把代码下载到服务器。完整动作是：
+
+```text
+官方基座仓库（upstream）
+        ↓ Fork
+Agent 或组织的基座 Fork（远程、可写）
+        ↓ Clone
+Agent 服务器上的 catalog checkout
+        ↓ create-site 选择一个模板
+客户独立站目录
+        ↓ 初始化并推送
+客户自己的 Git 仓库
+```
+
+### 服务器 Agent 获取基座
+
+先通过 GitHub、GitLab 或其他 Git 平台的 UI/API 创建 Fork，然后在服务器执行：
+
+```bash
+git clone <agent-fork-url> website-catalog
+cd website-catalog
+git remote add upstream <canonical-catalog-url>
+git fetch upstream --tags
+git checkout --detach <approved-tag-or-commit>
+npm ci
+npm run verify
+```
+
+要求：
+
+- `origin` 指向 Agent 或组织的 Fork；
+- `upstream` 指向官方基座仓库；
+- 每次客户任务固定到明确 tag 或 commit，避免任务执行中模板变化；
+- 记录 `upstream URL`、模板 ID 和 source commit；
+- 客户上传资料不要放进基座 Fork；
+- Agent 需要改进基座时，在 Fork 中开分支并向 upstream 提交 PR；
+- Agent 制作客户页面时，不把客户代码提交到基座 Fork。
+
+如果服务器只需要读取基座且永远不会提交基座改进，技术上直接 Clone upstream 也能获取代码；但按照当前团队治理要求，服务器 Agent 统一先 Fork，可以获得可写隔离、审计和 PR 通道。
+
+### 为什么客户站还需要独立仓库
+
+Git 的 Fork 以“整个仓库”为单位，不能只 Fork `templates/nexus/`。直接把客户站开发在 catalog Fork 中，会同时携带三个模板、生成脚本和其他客户不需要的目录。
+
+因此当前架构采用两层仓库：
+
+1. **基座 Fork**：服务器 Agent 获取、缓存、升级模板，并向 upstream 贡献改进；
+2. **客户站仓库**：只包含选中的一个模板和该客户内容。
+
+如果未来要求“每个客户站本身必须保持 Fork 关系”，则应把 Lumen、Forge、Nexus 分别发布为三个独立模板仓库，再 Fork 被选中的模板仓库。不要 Fork 当前 catalog 后手工删除另外两个模板。
 
 ### 模板选择
 
@@ -124,6 +185,15 @@ cd ../client-website
 npm install
 ```
 
+在 `notes/requirements.md` 记录来源信息：
+
+```text
+catalogUpstream: <canonical-catalog-url>
+catalogFork: <agent-fork-url>
+templateId: lumen | forge | nexus
+templateSourceCommit: <full-commit-sha>
+```
+
 然后重新读取该项目的：
 
 1. `AGENTS.md`
@@ -135,6 +205,8 @@ npm install
 7. Git 状态
 
 从此只在客户项目中实施客户内容，不回写模板的演示页面。
+
+客户项目验证通过后，为它创建新的远程仓库并设置为客户项目的 `origin`。基座 Fork 与客户站仓库不能使用同一个 origin。
 
 ---
 
@@ -369,6 +441,13 @@ materials/
 
 不要用 destructive Git 命令清理用户改动。遇到已有未提交修改时，先辨认所有权并绕开无关内容。
 
+远程服务器还要确认两个仓库的职责：
+
+- catalog checkout 的 `origin` 是 Agent 基座 Fork；
+- 客户项目的 `origin` 是该客户的独立网站仓库；
+- 客户资料和客户页面不得被推送到 catalog Fork；
+- 基座改进不得直接混进客户站提交。
+
 ---
 
 ## 13. 交付回复模板
@@ -393,6 +472,8 @@ materials/
 
 在结束任务前逐项回答“是”：
 
+- [ ] 如果我在远程服务器，我已 Fork、Clone 并固定基座 source commit。
+- [ ] 我记录了 upstream、Fork、模板 ID 和 source commit。
 - [ ] 我在 catalog 外创建了独立客户目录。
 - [ ] 我读取了客户项目的 `AGENTS.md` 和 skill。
 - [ ] 我先提取资料，再询问缺口。
