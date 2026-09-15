@@ -1,0 +1,20 @@
+---
+import CompanyIntro from "../components/sections/CompanyIntro.astro";
+import ContactCta from "../components/sections/ContactCta.astro";
+import FeaturedProducts from "../components/sections/FeaturedProducts.astro";
+import Hero from "../components/sections/Hero.astro";
+import company from "../data/company.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { makePageTitle } from "../lib/seo";
+---
+
+<BaseLayout
+  title={makePageTitle()}
+  description={`${company.name} presents confirmed company capabilities and product information in a fast, accessible static website.`}
+  image="/media/company/factory.svg"
+>
+  <Hero />
+  <CompanyIntro />
+  <FeaturedProducts />
+  <ContactCta />
+</BaseLayout>

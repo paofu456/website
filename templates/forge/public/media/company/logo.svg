@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 48" role="img" aria-labelledby="title">
+  <title id="title">Northstar Industrial demonstration logo</title>
+  <rect width="48" height="48" rx="14" fill="#0c6b58"/>
+  <path d="M12 35V13h6l12 12V13h6v22h-6L18 23v12z" fill="#fff"/>
+  <circle cx="38" cy="10" r="5" fill="#f0b44d"/>
+  <text x="60" y="23" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#10211d">NORTHSTAR</text>
+  <text x="60" y="38" font-family="Arial,sans-serif" font-size="10" letter-spacing="2" fill="#5b6b66">INDUSTRIAL</text>
+</svg>

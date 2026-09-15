@@ -1,0 +1,36 @@
+---
+import company from "../../data/company.json";
+import { siteConfig } from "../../../site.config";
+import Container from "../ui/Container.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-ink)]">
+  <Container class="grid gap-12 py-20 md:grid-cols-[1.6fr_1fr_1fr]">
+    <div>
+      <p class="font-[var(--font-heading)] text-4xl">{company.shortName}</p>
+      <p class="mt-6 max-w-md text-sm leading-7 text-[var(--color-muted)]">{company.description}</p>
+    </div>
+    <div>
+      <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-accent)]">Index</h2>
+      <ul class="mt-5 space-y-3 text-sm text-[var(--color-muted)]">
+        {siteConfig.navigation.map((item, index) => <li><a class="hover:text-[var(--color-ink)]" href={item.href}>0{index + 1} — {item.label}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-accent)]">Contact</h2>
+      <ul class="mt-5 space-y-3 text-sm text-[var(--color-muted)]">
+        <li><a class="hover:text-[var(--color-ink)]" href={`mailto:${company.email}`}>{company.email}</a></li>
+        <li><a class="hover:text-[var(--color-ink)]" href={`tel:${company.phone.replace(/\s/g, "")}`}>{company.phone}</a></li>
+        <li>{company.location}</li>
+      </ul>
+    </div>
+  </Container>
+  <div class="border-t border-[var(--color-line)]">
+    <Container class="flex flex-col gap-2 py-6 text-xs text-[var(--color-muted)] sm:flex-row sm:justify-between">
+      <p>© {year} {company.name}. All rights reserved.</p>
+      <p>Lumen editorial starter · Demo content</p>
+    </Container>
+  </div>
+</footer>

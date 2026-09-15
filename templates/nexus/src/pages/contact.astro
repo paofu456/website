@@ -1,0 +1,51 @@
+---
+import Container from "../components/ui/Container.astro";
+import company from "../data/company.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { makePageTitle } from "../lib/seo";
+
+const phoneHref = company.phone.replace(/\s/g, "");
+const whatsappHref = company.whatsapp.replace(/[^\d+]/g, "");
+---
+
+<BaseLayout
+  title={makePageTitle("Contact")}
+  description={`Contact ${company.name} using its confirmed email, telephone, WhatsApp, and business address details.`}
+>
+  <section class="relative overflow-hidden bg-[var(--color-ink)] py-20 text-white sm:py-28">
+    <div class="absolute inset-0 opacity-25" aria-hidden="true" style="background-image: radial-gradient(circle at 85% 30%, #43a48f 0, transparent 32%);"></div>
+    <Container class="relative">
+      <p class="mb-5 text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--color-accent)]">Contact</p>
+      <h1 class="max-w-4xl text-5xl font-extrabold leading-[1.05] sm:text-7xl">Start with a direct, working contact channel.</h1>
+      <p class="mt-7 max-w-2xl text-xl leading-9 text-white/65">This starter links to real communication tools instead of presenting a form that does not send anywhere.</p>
+    </Container>
+  </section>
+
+  <section class="py-24 sm:py-32">
+    <Container class="grid gap-6 lg:grid-cols-3">
+      <a href={`mailto:${company.email}`} class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-8 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+        <p class="eyebrow">Email</p>
+        <h2 class="mt-4 text-2xl font-extrabold">Send an email</h2>
+        <p class="mt-3 break-all text-[var(--color-muted)]">{company.email}</p>
+      </a>
+      <a href={`tel:${phoneHref}`} class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-8 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+        <p class="eyebrow">Telephone</p>
+        <h2 class="mt-4 text-2xl font-extrabold">Call our team</h2>
+        <p class="mt-3 text-[var(--color-muted)]">{company.phone}</p>
+      </a>
+      <a href={`https://wa.me/${whatsappHref.replace("+", "")}`} class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-8 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+        <p class="eyebrow">WhatsApp</p>
+        <h2 class="mt-4 text-2xl font-extrabold">Message us</h2>
+        <p class="mt-3 text-[var(--color-muted)]">{company.whatsapp}</p>
+      </a>
+    </Container>
+
+    <Container class="mt-10">
+      <div class="rounded-[var(--radius-card)] bg-[var(--color-primary)] p-8 text-white sm:p-12">
+        <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--color-accent)]">Business address</p>
+        <h2 class="mt-4 text-3xl font-extrabold">{company.location}</h2>
+        <p class="mt-3 max-w-2xl text-lg text-white/70">{company.address}</p>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

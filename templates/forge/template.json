@@ -1,0 +1,8 @@
+{
+  "id": "forge",
+  "name": "Forge · 产品目录",
+  "version": "0.1.0",
+  "description": "A catalog-first industrial company website with product grids, detail pages, and prominent specifications.",
+  "style": ["product-led", "structured", "industrial"],
+  "bestFor": ["industrial equipment", "component suppliers", "manufacturers"]
+}

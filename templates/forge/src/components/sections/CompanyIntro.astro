@@ -1,0 +1,30 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+import SectionHeading from "../ui/SectionHeading.astro";
+---
+
+<section class="py-24 sm:py-32">
+  <Container class="grid items-start gap-12 lg:grid-cols-[1fr_.85fr] lg:gap-20">
+    <SectionHeading
+      eyebrow="Built around clear facts"
+      title="A flexible foundation for a credible company story."
+      description="Shared company data keeps core facts consistent, while Astro sections give an Agent room to shape the page around the material that actually exists."
+    />
+    <div class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white p-8 shadow-[var(--shadow-card)] sm:p-10">
+      <p class="text-lg leading-8 text-[var(--color-muted)]">{company.description}</p>
+      <dl class="mt-8 grid grid-cols-2 gap-6 border-t border-[var(--color-line)] pt-8">
+        <div>
+          <dt class="text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">Established</dt>
+          <dd class="mt-2 font-extrabold text-[var(--color-ink)]">{company.founded}</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">Location</dt>
+          <dd class="mt-2 font-extrabold text-[var(--color-ink)]">{company.location}</dd>
+        </div>
+      </dl>
+      <Button href="/about/" variant="text" class="mt-7 px-0">Read our company profile →</Button>
+    </div>
+  </Container>
+</section>

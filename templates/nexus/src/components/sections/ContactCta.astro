@@ -1,0 +1,22 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+---
+
+<section class="pb-24 sm:pb-32">
+  <Container>
+    <div class="relative overflow-hidden rounded-[2rem] bg-[var(--color-primary)] px-7 py-14 text-white sm:px-12 lg:grid lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16 lg:px-16">
+      <div class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--color-accent)] opacity-25" aria-hidden="true"></div>
+      <div class="relative">
+        <p class="text-xs font-extrabold uppercase tracking-[.16em] text-[var(--color-accent)]">Ready to connect</p>
+        <h2 class="mt-4 max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl">Turn interest into a direct business conversation.</h2>
+        <p class="mt-5 text-lg text-white/70">Use a confirmed channel and make the next step clear.</p>
+      </div>
+      <div class="relative mt-8 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
+        <Button href={`mailto:${company.email}`} class="bg-white text-[var(--color-primary)] hover:bg-[var(--color-accent)]">Email sales</Button>
+        <Button href="/contact/" variant="secondary" class="border-white/30 bg-white/10 text-white hover:border-white">Contact details</Button>
+      </div>
+    </div>
+  </Container>
+</section>

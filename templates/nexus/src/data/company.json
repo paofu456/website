@@ -1,0 +1,16 @@
+{
+  "name": "Northstar Industrial",
+  "shortName": "Northstar",
+  "tagline": "Components engineered for demanding production lines",
+  "description": "Northstar Industrial is demonstration content for this starter. Replace every company fact with confirmed customer information before delivery.",
+  "founded": "Demo content",
+  "location": "Demo location",
+  "email": "hello@example.com",
+  "phone": "+00 000 000 000",
+  "whatsapp": "+00 000 000 000",
+  "address": "Demo address — replace before delivery",
+  "logo": "/media/company/logo.svg",
+  "social": {
+    "linkedin": ""
+  }
+}

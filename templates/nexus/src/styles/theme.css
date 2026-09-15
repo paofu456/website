@@ -1,0 +1,14 @@
+:root {
+  --color-ink: #0f1c3f;
+  --color-muted: #61708f;
+  --color-surface: #f3f6fb;
+  --color-card: #ffffff;
+  --color-line: #dce4f1;
+  --color-primary: #315bd8;
+  --color-primary-dark: #2446aa;
+  --color-accent: #68d5c4;
+  --font-heading: "Aptos Display", "Segoe UI", sans-serif;
+  --font-body: "Aptos", "Segoe UI", sans-serif;
+  --shadow-card: 0 24px 70px rgba(21, 47, 111, 0.11);
+  --radius-card: 1.1rem;
+}

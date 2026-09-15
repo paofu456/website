@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" role="img" aria-labelledby="title">
+  <title id="title">Demonstration modular pump rendering</title>
+  <rect width="800" height="620" rx="36" fill="#e5efec"/>
+  <path d="M150 460h500v42H150z" fill="#10211d"/>
+  <circle cx="335" cy="315" r="148" fill="#0c6b58"/>
+  <circle cx="335" cy="315" r="74" fill="#d8e7e2"/>
+  <path d="M335 241l70 112-140-5z" fill="#f0b44d"/>
+  <path d="M465 255h150v122H465z" fill="#164f45"/>
+  <path d="M500 215h80v40h-80zM505 377h70v83h-70z" fill="#10211d"/>
+  <path d="M187 210h65v-65h80" stroke="#10211d" stroke-width="26" fill="none"/>
+</svg>

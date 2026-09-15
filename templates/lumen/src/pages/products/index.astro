@@ -1,0 +1,30 @@
+---
+import ProductCard from "../../components/product/ProductCard.astro";
+import Container from "../../components/ui/Container.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedProducts } from "../../lib/products";
+import { makePageTitle } from "../../lib/seo";
+
+const products = await getPublishedProducts();
+---
+
+<BaseLayout
+  title={makePageTitle("Products")}
+  description="Browse confirmed company products with stable detail pages, concise summaries, public media, and structured specifications."
+>
+  <section class="border-b border-[var(--color-line)] bg-white py-20 sm:py-28">
+    <Container>
+      <p class="eyebrow mb-5">Products</p>
+      <h1 class="max-w-5xl text-5xl font-extrabold leading-[1.05] sm:text-7xl">A product catalog built for clarity and steady growth.</h1>
+      <p class="mt-7 max-w-3xl text-xl leading-9 text-[var(--color-muted)]">Every product is a separate content file with its own stable URL, media, specifications, and SEO fields.</p>
+    </Container>
+  </section>
+
+  <section class="py-24 sm:py-32">
+    <Container>
+      <div class="grid gap-x-8 gap-y-16 md:grid-cols-2">
+        {products.map((product) => <ProductCard product={product} />)}
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

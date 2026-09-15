@@ -1,0 +1,24 @@
+---
+import Button from "../components/ui/Button.astro";
+import Container from "../components/ui/Container.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { makePageTitle } from "../lib/seo";
+---
+
+<BaseLayout
+  title={makePageTitle("Page not found")}
+  description="The requested page could not be found. Return to the company website home page or browse the product catalog."
+  noindex={true}
+>
+  <section class="py-28 sm:py-40">
+    <Container class="text-center">
+      <p class="text-8xl font-extrabold text-[var(--color-primary)] sm:text-9xl">404</p>
+      <h1 class="mt-6 text-4xl font-extrabold sm:text-6xl">This page is off the production line.</h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg text-[var(--color-muted)]">The URL may have changed or the page may no longer exist.</p>
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <Button href="/">Return home</Button>
+        <Button href="/products/" variant="secondary">Browse products</Button>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

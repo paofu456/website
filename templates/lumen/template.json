@@ -1,0 +1,8 @@
+{
+  "id": "lumen",
+  "name": "Lumen · 极简画册",
+  "version": "0.1.0",
+  "description": "An editorial company website with generous whitespace, large imagery, and an understated premium tone.",
+  "style": ["editorial", "minimal", "image-led"],
+  "bestFor": ["design-led manufacturers", "architecture", "premium materials"]
+}

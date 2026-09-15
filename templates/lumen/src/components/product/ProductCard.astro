@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props { product: CollectionEntry<"products">; }
+const { product } = Astro.props;
+const image = product.data.images[0];
+---
+
+<article class="group border-t border-[var(--color-ink)] pt-4">
+  <div class="mb-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.18em]">
+    <span>Product / {String(product.data.order).padStart(2, "0")}</span>
+    <span class="text-[var(--color-muted)]">Selected</span>
+  </div>
+  <a href={`/products/${product.data.slug}/`} class="block overflow-hidden bg-[#ded9ce]">
+    <img src={image.src} alt={image.alt} width="800" height="620" loading="lazy" class="aspect-[4/3] h-auto w-full object-cover transition duration-700 group-hover:scale-[1.025]" />
+  </a>
+  <div class="grid gap-4 pt-5 sm:grid-cols-[1fr_.7fr]">
+    <h3 class="text-3xl leading-none"><a href={`/products/${product.data.slug}/`}>{product.data.title}</a></h3>
+    <div>
+      <p class="text-sm leading-6 text-[var(--color-muted)]">{product.data.summary}</p>
+      <a href={`/products/${product.data.slug}/`} class="mt-4 inline-block border-b border-[var(--color-ink)] pb-1 text-xs font-bold uppercase tracking-[0.14em]">Details</a>
+    </div>
+  </div>
+</article>

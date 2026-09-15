@@ -1,0 +1,22 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+---
+
+<section class="py-24 sm:py-32">
+  <Container>
+    <div class="relative overflow-hidden rounded-[2rem] bg-[var(--color-primary)] px-6 py-14 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-16 lg:py-16">
+      <div class="absolute -right-20 -top-32 h-80 w-80 rounded-full border-[60px] border-white/10" aria-hidden="true"></div>
+      <div class="relative max-w-3xl">
+        <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--color-accent)]">A clear next step</p>
+        <h2 class="mt-4 text-3xl font-extrabold leading-tight sm:text-5xl">Make it easy for qualified buyers to start a real conversation.</h2>
+        <p class="mt-5 text-lg text-white/75">Use confirmed contact channels—without a fake form or an invented success message.</p>
+      </div>
+      <div class="relative mt-8 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
+        <Button href={`mailto:${company.email}`} class="bg-white text-[var(--color-primary)] hover:bg-[var(--color-accent)]">Email our team</Button>
+        <Button href="/contact/" variant="secondary" class="border-white/25 bg-white/10 text-white hover:border-white">Contact details</Button>
+      </div>
+    </div>
+  </Container>
+</section>

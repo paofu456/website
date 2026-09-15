@@ -1,0 +1,47 @@
+---
+import ContactCta from "../components/sections/ContactCta.astro";
+import Container from "../components/ui/Container.astro";
+import company from "../data/company.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { makePageTitle } from "../lib/seo";
+---
+
+<BaseLayout
+  title={makePageTitle("About")}
+  description={`Learn how ${company.name} presents its confirmed background, capabilities, and approach without unsupported company claims.`}
+  image="/media/company/factory.svg"
+>
+  <section class="border-b border-[var(--color-line)] bg-white py-20 sm:py-28">
+    <Container>
+      <p class="eyebrow mb-5">About the company</p>
+      <h1 class="max-w-5xl text-5xl font-extrabold leading-[1.05] sm:text-7xl">A company profile shaped by evidence, not filler.</h1>
+      <p class="mt-7 max-w-3xl text-xl leading-9 text-[var(--color-muted)]">{company.description}</p>
+    </Container>
+  </section>
+
+  <section class="py-24 sm:py-32">
+    <Container class="grid items-start gap-14 lg:grid-cols-2 lg:gap-20">
+      <img src="/media/company/factory.svg" alt="Demonstration industrial facility illustration" width="900" height="700" class="w-full rounded-[var(--radius-card)] shadow-[var(--shadow-card)]" />
+      <div>
+        <p class="eyebrow mb-4">Company narrative</p>
+        <h2 class="text-4xl font-extrabold leading-tight sm:text-5xl">Replace this structure with the company's verified story.</h2>
+        <div class="prose-site mt-7">
+          <p>The starter deliberately avoids fabricated milestones, customer logos, certifications, capacity numbers, and testimonials. An Agent should introduce those sections only when source materials support them.</p>
+          <p>Use this page for the facts that help a buyer understand the company: its background, operating focus, locations, quality approach, and the people or processes behind its work.</p>
+        </div>
+        <dl class="mt-9 grid gap-5 sm:grid-cols-2">
+          <div class="rounded-2xl border border-[var(--color-line)] bg-white p-6">
+            <dt class="text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">Established</dt>
+            <dd class="mt-2 text-lg font-extrabold">{company.founded}</dd>
+          </div>
+          <div class="rounded-2xl border border-[var(--color-line)] bg-white p-6">
+            <dt class="text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">Location</dt>
+            <dd class="mt-2 text-lg font-extrabold">{company.location}</dd>
+          </div>
+        </dl>
+      </div>
+    </Container>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

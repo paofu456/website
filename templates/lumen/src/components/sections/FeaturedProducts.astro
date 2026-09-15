@@ -1,0 +1,27 @@
+---
+import { getPublishedProducts } from "../../lib/products";
+import ProductCard from "../product/ProductCard.astro";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+
+const products = (await getPublishedProducts()).filter((product) => product.data.featured).slice(0, 3);
+---
+
+<section class="border-y border-[var(--color-line)] bg-[var(--color-card)] py-24 sm:py-36">
+  <Container>
+    <div class="grid gap-8 border-t border-[var(--color-ink)] pt-4 lg:grid-cols-[.35fr_1fr]">
+      <p class="text-xs font-bold uppercase tracking-[0.16em]">02 / Selected products</p>
+      <div class="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
+        <h2 class="max-w-3xl text-5xl leading-none sm:text-7xl">Objects, systems, and precise details.</h2>
+        <Button href="/products/" variant="text" class="shrink-0">Full collection</Button>
+      </div>
+    </div>
+    <div class="mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2">
+      {products.map((product, index) => (
+        <div class:list={[index === 0 && "md:col-span-2 md:w-[72%]"]}>
+          <ProductCard product={product} />
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>

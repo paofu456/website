@@ -1,0 +1,21 @@
+---
+import { getPublishedProducts } from "../../lib/products";
+import ProductCard from "../product/ProductCard.astro";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+import SectionHeading from "../ui/SectionHeading.astro";
+
+const products = (await getPublishedProducts()).filter((product) => product.data.featured).slice(0, 3);
+---
+
+<section class="py-24 sm:py-32">
+  <Container>
+    <div class="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
+      <SectionHeading eyebrow="Featured portfolio" title="Products presented with the right level of detail." description="A balanced catalog for business buyers who need a quick overview and a reliable route to specifications." />
+      <Button href="/products/" variant="secondary" class="shrink-0">All products</Button>
+    </div>
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {products.map((product) => <ProductCard product={product} />)}
+    </div>
+  </Container>
+</section>

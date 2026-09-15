@@ -1,0 +1,12 @@
+{
+  "name": "company-website-template-catalog",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["templates/*"],
+  "scripts": {
+    "create-site": "node scripts/create-site.mjs",
+    "verify": "node scripts/verify-templates.mjs",
+    "verify:templates": "node scripts/verify-templates.mjs"
+  }
+}

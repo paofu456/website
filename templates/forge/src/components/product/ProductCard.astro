@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  product: CollectionEntry<"products">;
+}
+
+const { product } = Astro.props;
+const image = product.data.images[0];
+---
+
+<article class="group overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-white transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+  <a href={`/products/${product.data.slug}/`} class="block overflow-hidden bg-[#e5efec]">
+    <img
+      src={image.src}
+      alt={image.alt}
+      width="800"
+      height="620"
+      loading="lazy"
+      class="aspect-[4/3] h-auto w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+    />
+  </a>
+  <div class="p-6 sm:p-7">
+    <h3 class="text-xl font-extrabold text-[var(--color-ink)]">
+      <a href={`/products/${product.data.slug}/`} class="hover:text-[var(--color-primary)]">{product.data.title}</a>
+    </h3>
+    <p class="mt-3 text-sm leading-7 text-[var(--color-muted)]">{product.data.summary}</p>
+    <a href={`/products/${product.data.slug}/`} class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[var(--color-primary)]">
+      View product <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

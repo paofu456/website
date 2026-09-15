@@ -1,0 +1,38 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+---
+
+<section class="relative overflow-hidden bg-[var(--color-ink)] text-white">
+  <div class="absolute inset-0 opacity-30" aria-hidden="true" style="background-image: radial-gradient(circle at 76% 18%, #43a48f 0, transparent 32%), linear-gradient(115deg, transparent 55%, rgba(240,180,77,.18));"></div>
+  <Container class="relative grid min-h-[680px] items-center gap-14 py-20 lg:grid-cols-[1.05fr_.95fr] lg:py-24">
+    <div>
+      <p class="mb-6 inline-flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.2em] text-[var(--color-accent)]">
+        <span class="h-px w-10 bg-[var(--color-accent)]"></span>
+        Company website starter
+      </p>
+      <h1 class="max-w-4xl text-5xl font-extrabold leading-[1.02] sm:text-6xl lg:text-7xl">{company.tagline}</h1>
+      <p class="mt-7 max-w-2xl text-lg leading-8 text-white/70 sm:text-xl">{company.description}</p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <Button href="/products/" class="bg-[var(--color-accent)] text-[var(--color-ink)] hover:bg-white">Explore products</Button>
+        <Button href="/contact/" variant="secondary" class="border-white/25 bg-white/10 text-white hover:border-white">Talk to our team</Button>
+      </div>
+    </div>
+
+    <div class="relative lg:pl-8">
+      <div class="absolute -inset-5 rounded-[2rem] border border-white/10" aria-hidden="true"></div>
+      <img
+        src="/media/company/factory.svg"
+        alt="Demonstration illustration of an industrial facility"
+        width="900"
+        height="700"
+        class="relative w-full rounded-[1.75rem] shadow-2xl"
+      />
+      <div class="absolute -bottom-6 -left-3 max-w-[15rem] rounded-2xl bg-white p-5 text-[var(--color-ink)] shadow-xl sm:left-0">
+        <p class="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--color-primary)]">Agent-ready</p>
+        <p class="mt-2 text-sm font-bold leading-6">Structured content with pages that remain easy to customize.</p>
+      </div>
+    </div>
+  </Container>
+</section>

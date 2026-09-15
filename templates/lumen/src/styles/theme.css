@@ -1,0 +1,14 @@
+:root {
+  --color-ink: #171714;
+  --color-muted: #6d6a63;
+  --color-surface: #f2efe8;
+  --color-card: #f8f6f0;
+  --color-line: #d4cfc4;
+  --color-primary: #171714;
+  --color-primary-dark: #34342e;
+  --color-accent: #ad6840;
+  --font-heading: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-body: "Helvetica Neue", Arial, sans-serif;
+  --shadow-card: 0 28px 80px rgba(23, 23, 20, 0.1);
+  --radius-card: 0.35rem;
+}

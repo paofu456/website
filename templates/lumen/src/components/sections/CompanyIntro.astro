@@ -1,0 +1,24 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+---
+
+<section class="py-24 sm:py-36">
+  <Container class="grid gap-12 lg:grid-cols-[.35fr_1fr] lg:gap-20">
+    <div class="flex justify-between border-t border-[var(--color-ink)] pt-4 text-xs font-bold uppercase tracking-[0.16em] lg:block">
+      <p>01 / Profile</p>
+      <p class="text-[var(--color-muted)] lg:mt-3">{company.location}</p>
+    </div>
+    <div>
+      <h2 class="max-w-5xl text-4xl leading-[1.08] sm:text-6xl lg:text-7xl">A quiet framework that gives verified company material room to speak.</h2>
+      <div class="mt-12 grid gap-8 border-t border-[var(--color-line)] pt-8 sm:grid-cols-2">
+        <p class="text-lg leading-8 text-[var(--color-muted)]">{company.description}</p>
+        <div class="sm:pl-8">
+          <p class="text-sm leading-7 text-[var(--color-muted)]">The editorial structure favors strong imagery, short statements, and carefully selected facts over dense promotional sections.</p>
+          <Button href="/about/" variant="text" class="mt-6">Company profile</Button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

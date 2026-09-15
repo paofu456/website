@@ -1,0 +1,26 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+---
+
+<section class="overflow-hidden border-b border-[var(--color-line)]">
+  <Container class="py-16 sm:py-24 lg:py-28">
+    <div class="grid items-end gap-10 lg:grid-cols-[1.25fr_.55fr]">
+      <div>
+        <p class="eyebrow mb-7">Industrial objects / considered systems</p>
+        <h1 class="max-w-6xl text-[clamp(4rem,9vw,9rem)] leading-[0.86]">{company.tagline}</h1>
+      </div>
+      <div class="pb-2">
+        <p class="text-base leading-7 text-[var(--color-muted)]">{company.description}</p>
+        <div class="mt-8 flex gap-7">
+          <Button href="/products/" variant="text">View collection</Button>
+          <Button href="/contact/" variant="text">Contact studio</Button>
+        </div>
+      </div>
+    </div>
+  </Container>
+  <div class="px-3 pb-3 sm:px-6 sm:pb-6">
+    <img src="/media/company/factory.svg" alt="Demonstration illustration of an industrial facility" width="1800" height="900" class="h-[52vh] min-h-[28rem] w-full object-cover lg:h-[68vh]" />
+  </div>
+</section>

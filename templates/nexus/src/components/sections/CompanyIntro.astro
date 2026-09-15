@@ -1,0 +1,33 @@
+---
+import company from "../../data/company.json";
+import Button from "../ui/Button.astro";
+import Container from "../ui/Container.astro";
+import SectionHeading from "../ui/SectionHeading.astro";
+---
+
+<section class="bg-white py-24 sm:py-32">
+  <Container>
+    <SectionHeading eyebrow="A credible company presence" title="Organize the information buyers need to understand the business." description="The Nexus structure balances company positioning, capabilities, products, and direct contact routes without overwhelming the reader." align="center" />
+    <div class="mt-14 grid gap-5 md:grid-cols-3">
+      <article class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-surface)] p-7">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-[#dfe8ff] font-extrabold text-[var(--color-primary)]">01</span>
+        <h3 class="mt-7 text-2xl font-extrabold">Verified profile</h3>
+        <p class="mt-3 text-sm leading-7 text-[var(--color-muted)]">Present confirmed background, location, and operating focus from one shared company data source.</p>
+      </article>
+      <article class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-surface)] p-7">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-[#dff7f2] font-extrabold text-[#16766a]">02</span>
+        <h3 class="mt-7 text-2xl font-extrabold">Clear offering</h3>
+        <p class="mt-3 text-sm leading-7 text-[var(--color-muted)]">Connect concise product summaries to dedicated pages with confirmed specifications and media.</p>
+      </article>
+      <article class="rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-surface)] p-7">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-[#f0e8ff] font-extrabold text-[#7750ad]">03</span>
+        <h3 class="mt-7 text-2xl font-extrabold">Direct next step</h3>
+        <p class="mt-3 text-sm leading-7 text-[var(--color-muted)]">Use working email, telephone, and WhatsApp links rather than a form without a real receiver.</p>
+      </article>
+    </div>
+    <div class="mt-10 flex flex-col items-start justify-between gap-6 rounded-[var(--radius-card)] bg-[var(--color-ink)] p-8 text-white sm:flex-row sm:items-center">
+      <p class="max-w-2xl text-lg text-white/70">{company.description}</p>
+      <Button href="/about/" class="shrink-0 bg-white text-[var(--color-ink)] hover:bg-[var(--color-accent)]">Company profile</Button>
+    </div>
+  </Container>
+</section>
