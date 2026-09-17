@@ -7,12 +7,21 @@ import { fileURLToPath } from "node:url";
 const catalogDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const templatesDirectory = path.join(catalogDirectory, "templates");
 const portableCompanyWebsiteSkill = path.join(catalogDirectory, "agent-skills", "company-website");
+const forbiddenCatalogWorkspaces = [".tmp", "materials"];
 const templateIds = fs.readdirSync(templatesDirectory, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
   .sort();
 
 let failed = false;
+
+for (const relative of forbiddenCatalogWorkspaces) {
+  const candidate = path.join(catalogDirectory, relative);
+  if (fs.existsSync(candidate)) {
+    console.error(`[fail] catalog contains forbidden customer workspace: ${relative}`);
+    failed = true;
+  }
+}
 
 function listFiles(directory, prefix = "") {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

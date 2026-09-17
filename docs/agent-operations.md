@@ -5,10 +5,12 @@
 ## 仓库关系
 
 ```text
-运营方维护的统一基座仓库 website
-          ↓ 每台 Agent 服务器 Clone
-固定批准的 commit/tag，并验证基座
-          ↓ 读取该 Agent 手中的客户资料
+用户发起新客户建站
+          ↓ 没有资料时，Agent 请求用户上传附件并等待
+读取附件、提取事实、一次性补齐 P0 并确认公开授权
+          ↓
+Clone/复用统一基座并固定批准的 commit/tag
+          ↓ 验证基座
 选择 lumen / forge / nexus，create-site
           ↓ 在基座目录之外生成
 创建该客户的空远程仓库，初始化客户项目 Git
@@ -37,20 +39,21 @@ npm run install:agent-skills -- --target <agent-skills-directory>
 
 ## 每个客户任务
 
-1. 为任务准备独立工作目录，例如 `<jobs>/<client-slug>/`，把原始资料放入其中；不要放进基座。
-2. Agent Clone 或复用本机的 `website` catalog，检出运营方批准的 commit/tag，运行 `npm ci` 和 `npm run verify`。
-3. 按 `docs/onboarding.md` 消化资料、补齐 P0 输入，并选择一个模板。
-4. 从 catalog 运行：
+1. 如果对话中尚未收到资料，Agent 先请用户上传现有 PDF、Word、PPT、表格、Logo 和图片，然后等待；不要要求用户编造本地资料目录。
+2. 收到附件后使用运行时提供的真实附件路径。先完整消化资料，再一次性询问真正缺失的 P0 信息和公开授权。P0 未确认时不得创建项目或远程仓库。
+3. 客户附件、PDF 页面、OCR、联系表和 intake notes 必须位于运行时附件区或 catalog 外的客户任务工作区；禁止写入 catalog 的 `.tmp/`、`materials/` 或任何其他目录。
+4. P0 就绪后，Agent Clone 或复用本机的 `website` catalog，检出运营方批准的 commit/tag，运行 `npm ci` 和 `npm run verify`。
+5. 按 `docs/onboarding.md` 选择一个模板，并从 catalog 运行：
 
    ```bash
    npm run create-site -- --template <lumen|forge|nexus> --target <absolute-customer-project-path>
    ```
 
-5. 把允许进入工作区的资料和内部记录放到客户项目的 `materials/`、`notes/`；`materials/` 默认不进入 Git。
-6. 创建该客户的空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。
-7. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`，继续做到完整 MVP，不能停在复制模板。
-8. 通过普通验证，执行并解释交付验证；只报告实际完成的视觉检查。
-9. 只暂存本次交付文件，Commit 后 Push 到客户仓库。不得把客户内容推回基座。
+6. 把原始资料和内部记录放到客户项目的 `materials/`、`notes/`；`materials/` 默认不进入 Git。
+7. 创建该客户的空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。
+8. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`，继续做到完整 MVP，不能停在复制模板。
+9. 通过普通验证，执行并解释交付验证；只报告实际完成的视觉检查。
+10. 只暂存本次交付文件，Commit 后 Push 到客户仓库。不得把客户内容推回基座。
 
 初始化示例：
 
