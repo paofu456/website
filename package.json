@@ -6,6 +6,7 @@
   "workspaces": ["templates/*"],
   "scripts": {
     "create-site": "node scripts/create-site.mjs",
+    "install:agent-skills": "node scripts/install-agent-skills.mjs",
     "verify": "node scripts/verify-templates.mjs",
     "verify:templates": "node scripts/verify-templates.mjs"
   }

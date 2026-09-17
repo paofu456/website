@@ -37,9 +37,22 @@ npm run dev
 
 ## Agent operating procedure
 
-For an end-to-end customer build, follow [`docs/site-build-sop.md`](docs/site-build-sop.md). It connects material intake, template selection, project creation, content implementation, verification and handoff. Each generated project also contains a self-contained `skills/company-website` workflow so an external Agent can continue without access to this catalog.
+For an end-to-end customer build, follow [`docs/site-build-sop.md`](docs/site-build-sop.md). For the shorter repository and multi-Agent operating model, read [`docs/agent-operations.md`](docs/agent-operations.md). Each generated project contains a self-contained `skills/company-website` workflow so an external Agent can continue without access to this catalog.
 
-On a remote Agent server, first fork this catalog in the Git provider and clone that fork to the server. The fork is the Agent's maintainable copy of the catalog; the selected customer website is then generated into its own directory and pushed to a separate customer repository. See the SOP for the exact repository boundaries.
+The operator maintains one catalog repository. Every remote Agent clones that same repository and pins an approved commit; it does not need to create another Fork. The selected customer website is generated outside the catalog and pushed to a separate customer repository. Ten customers therefore mean ten independent customer repositories, not ten companies inside this catalog.
+
+Portable Agent skills live in `agent-skills/`:
+
+- `company-site-bootstrap` gets or reuses the catalog, performs intake and creates the customer project.
+- `company-website` completes or modifies the generated Astro website.
+
+Install both into an Agent's skill directory without copying credentials:
+
+```bash
+npm run install:agent-skills -- --target <agent-skills-directory>
+```
+
+The installer refuses to overwrite an existing skill unless `--force` is supplied.
 
 Template selection happens once, during initialization. Moving an already customized site to another template is a migration, not a runtime theme switch.
 

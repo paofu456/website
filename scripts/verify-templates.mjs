@@ -6,18 +6,49 @@ import { fileURLToPath } from "node:url";
 
 const catalogDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const templatesDirectory = path.join(catalogDirectory, "templates");
+const portableCompanyWebsiteSkill = path.join(catalogDirectory, "agent-skills", "company-website");
 const templateIds = fs.readdirSync(templatesDirectory, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
   .sort();
 
 let failed = false;
+
+function listFiles(directory, prefix = "") {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const relative = path.join(prefix, entry.name);
+    return entry.isDirectory()
+      ? listFiles(path.join(directory, entry.name), relative)
+      : [relative];
+  }).sort();
+}
+
+function skillsMatch(left, right) {
+  if (!fs.existsSync(left) || !fs.existsSync(right)) return false;
+  const leftFiles = listFiles(left);
+  const rightFiles = listFiles(right);
+  return leftFiles.length === rightFiles.length
+    && leftFiles.every((file, index) => file === rightFiles[index])
+    && leftFiles.every((file) => fs.readFileSync(path.join(left, file)).equals(fs.readFileSync(path.join(right, file))));
+}
+
 for (const templateId of templateIds) {
   const directory = path.join(templatesDirectory, templateId);
   if (!fs.existsSync(path.join(directory, "template.json"))) {
     console.error(`[fail] ${templateId}: missing template.json`);
     failed = true;
     continue;
+  }
+
+  if (!fs.existsSync(path.join(directory, ".gitignore"))) {
+    console.error(`[fail] ${templateId}: missing .gitignore`);
+    failed = true;
+  }
+
+  const templateSkill = path.join(directory, "skills", "company-website");
+  if (!skillsMatch(portableCompanyWebsiteSkill, templateSkill)) {
+    console.error(`[fail] ${templateId}: company-website skill differs from agent-skills/company-website`);
+    failed = true;
   }
 
   console.log(`\n=== Verifying ${templateId} ===`);

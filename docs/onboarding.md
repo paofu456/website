@@ -35,9 +35,9 @@ S0 接单建档 ──→ S1 资料消化 ──→ S2 缺口校验 ──→ S3
 <intake 工作区>/<client-slug>/
   ├── materials/           # 原始上传，永不进入静态产物与 git 发布
   └── notes/
-      ├── facts.md           # S1 产出：资料消化事实库
-      ├── site-proposal.md   # S1 产出：站点定位方案（待客户确认）
-      └── gap-list.md        # S2 产出：信息缺口清单（分级、带状态）
+      ├── requirements.md    # 已确认事实、站点定位、范围和来源版本
+      ├── content-gaps.md    # 信息缺口清单（分级、降级方案、状态）
+      └── change-log.md      # 客户确认和重要处理记录
 ```
 
 `client-slug`：小写英文或拼音（如 `gsin`、`greoto`），全程同一 slug。
@@ -110,7 +110,7 @@ S0 接单建档 ──→ S1 资料消化 ──→ S2 缺口校验 ──→ S3
 - logo：扩展名 ∈ {svg, ai, eps, pdf, png}；png 需透明底且 ≥500px
 - 输出机检报告：通过项 + 失败项 + 修复指引（错误信息自带修复方向）
 
-### L2 消化校验（Agent 产出 facts.md 时自检）
+### L2 消化校验（Agent 更新 requirements.md 时自检）
 
 - **产品消化测试**：≥1 个产品能凑齐 {名称，一句话摘要，≥1 张语义正确的图，≥3 条参数或卖点}
 - **公司消化测试**：能写出含 {成立时间，地点，主营，≥1 条信任背书} 的一段话
@@ -120,7 +120,7 @@ S0 接单建档 ──→ S1 资料消化 ──→ S2 缺口校验 ──→ S3
 
 ### L3 客户确认
 
-`site-proposal.md`（市场/买家/核心叙事/主推产品线 4+1/模板建议/栏目清单）与 `gap-list.md` 合并为一轮，发客户确认。答复落进 facts.md 后逐条关闭。
+把 `requirements.md` 中的站点提案（市场/买家/核心叙事/主推产品线 4+1/模板建议/栏目清单）与 `content-gaps.md` 合并为一轮，发客户确认。答复写回 `requirements.md`，在 `change-log.md` 记录版本，并逐条关闭缺口。
 
 ---
 
@@ -136,7 +136,7 @@ S0 接单建档 ──→ S1 资料消化 ──→ S2 缺口校验 ──→ S3
 
 ---
 
-## 6. 缺口清单格式（gap-list.md）
+## 6. 缺口清单格式（content-gaps.md）
 
 ```markdown
 | # | 字段 | 级别 | 为什么需要 | 不补的降级方案 | 状态 |
@@ -147,7 +147,7 @@ S0 接单建档 ──→ S1 资料消化 ──→ S2 缺口校验 ──→ S3
 
 - 状态机：`open → answered → confirmed`（Agent 核实答复可用后关闭）
 - 每条缺口必须带降级方案（P0 除外）
-- 一轮问完；客户答复后版本号 +1，答复内容并入 facts.md
+- 一轮问完；客户答复后版本号 +1，答复内容并入 `requirements.md`，确认动作写入 `change-log.md`
 
 ---
 
@@ -157,7 +157,7 @@ P0 全清后：
 
 1. `npm run create-site -- --template <id> --target ../<client-slug>-website`
 2. `materials/` 迁入新项目（不进 git 发布、不进静态产物）
-3. `facts.md` / `site-proposal.md` 迁入新项目 `notes/`；gap-list 未清项转化为 `notes/content-gaps.md`
+3. 将 intake 工作区中的 `requirements.md`、`content-gaps.md`、`change-log.md` 迁入新项目 `notes/`
 4. `site.config.ts`：`siteMode: "local"`（域名未定），`contentStatus: "draft"`
 5. 后续按 `skills/company-website/references/first-build.md` 执行建站
 

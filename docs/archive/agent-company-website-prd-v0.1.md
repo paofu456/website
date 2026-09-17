@@ -1,5 +1,7 @@
 # Agent 静态企业官网基座 PRD
 
+> 已归档：本文记录早期 MVP 设想，不作为当前执行规范。当前流程以根 `README.md`、`docs/site-build-sop.md` 和 `docs/agent-operations.md` 为准。
+
 **版本：MVP v0.1**  
 **交付形态：前端代码仓库 + 建站 Skill + 本地检查脚本**
 

@@ -1,12 +1,7 @@
 node_modules/
-**/node_modules/
 dist/
-**/dist/
 .astro/
-**/.astro/
 .tmp/
-**/.tmp/
-.DS_Store
 *.log
 .env
 .env.*
@@ -14,6 +9,4 @@ dist/
 
 # Raw source materials are private by default.
 materials/*
-**/materials/*
 !materials/README.md
-!**/materials/README.md
