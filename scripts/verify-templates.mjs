@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const catalogDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const templatesDirectory = path.join(catalogDirectory, "templates");
 const portableCompanyWebsiteSkill = path.join(catalogDirectory, "agent-skills", "company-website");
+const giteeRepositoryScript = path.join(catalogDirectory, "agent-skills", "company-site-bootstrap", "scripts", "create-gitee-repo.mjs");
 const forbiddenCatalogWorkspaces = [".tmp", "materials"];
 const templateIds = fs.readdirSync(templatesDirectory, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
@@ -14,6 +15,11 @@ const templateIds = fs.readdirSync(templatesDirectory, { withFileTypes: true })
   .sort();
 
 let failed = false;
+
+if (!fs.existsSync(giteeRepositoryScript)) {
+  console.error("[fail] company-site-bootstrap is missing scripts/create-gitee-repo.mjs");
+  failed = true;
+}
 
 for (const relative of forbiddenCatalogWorkspaces) {
   const candidate = path.join(catalogDirectory, relative);
@@ -51,6 +57,16 @@ for (const templateId of templateIds) {
 
   if (!fs.existsSync(path.join(directory, ".gitignore"))) {
     console.error(`[fail] ${templateId}: missing .gitignore`);
+    failed = true;
+  }
+
+  const packageManifest = JSON.parse(fs.readFileSync(path.join(directory, "package.json"), "utf8"));
+  if (packageManifest.scripts?.["verify:handoff"] !== "node scripts/verify-handoff.mjs") {
+    console.error(`[fail] ${templateId}: missing verify:handoff package script`);
+    failed = true;
+  }
+  if (!fs.existsSync(path.join(directory, "scripts", "verify-handoff.mjs"))) {
+    console.error(`[fail] ${templateId}: missing scripts/verify-handoff.mjs`);
     failed = true;
   }
 

@@ -41,7 +41,7 @@ For an end-to-end customer build, follow [`docs/site-build-sop.md`](docs/site-bu
 
 The operator maintains one catalog repository. Every remote Agent clones that same repository and pins an approved commit; it does not need to create another Fork. The selected customer website is generated outside the catalog and pushed to a separate customer repository. Ten customers therefore mean ten independent customer repositories, not ten companies inside this catalog.
 
-For a conversational first build, the Agent first asks the user to upload available company materials when none were supplied. It reads the attachments, summarizes confirmed facts and authorization, then asks one consolidated set of genuine gaps. Only after the P0 inputs are confirmed does it clone or update the catalog, generate the customer project, create an empty customer remote repository, initialize Git, implement and verify the website, then commit and push. The user does not need to invent a local materials path, and customer attachments or extraction output must never be stored in this catalog. An existing customer website is modified by cloning its own repository directly; do not regenerate it from the catalog.
+For a conversational first build, the Agent first asks the user to upload available company materials when none were supplied. It reads the attachments, separates user confirmations, source facts, inferences and conflicts, then asks one consolidated set of genuine gaps. Only after the P0 inputs are confirmed does an external Agent clone the catalog into its own workspace at an approved commit, generate the customer project, create an empty private customer repository, initialize Git, implement and verify the website, then commit and push. A workflow acceptance test must not reuse the operator's maintenance checkout. The user does not need to invent a local materials path, and customer attachments or extraction output must never be stored in this catalog. An existing customer website is modified by cloning its own repository directly; do not regenerate it from the catalog.
 
 SSH authenticates clone and push to repositories that already exist. Creating a new remote repository requires an authorized provider API token or a central repository-provisioning service. Credentials stay in the Agent host's SSH/secret configuration and are never stored in this repository or its skills.
 
@@ -49,6 +49,8 @@ Portable Agent skills live in `agent-skills/`:
 
 - `company-site-bootstrap` gets or reuses the catalog, performs intake and creates the customer project.
 - `company-website` completes or modifies the generated Astro website.
+
+The generated projects also expose `npm run verify:handoff -- --owner <owner> --repo <customer-repo>`. It verifies that the clean local `main` commit is present on the expected customer SSH remote; a local commit alone is not repository delivery.
 
 Install both into an Agent's skill directory without copying credentials:
 

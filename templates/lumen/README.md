@@ -14,6 +14,7 @@ npm install
 npm run dev
 npm run build
 npm run verify
+npm run verify:handoff -- --owner <owner> --repo <customer-repo>
 ```
 
 Run `npm run verify:delivery` before handing a generated company site to a user. Delivery verification fails while the starter still contains demo content.
@@ -26,6 +27,7 @@ Run `npm run verify:delivery` before handing a generated company site to a user.
 4. Replace public company facts in `src/data/company.json`.
 5. Replace demo product files and copy approved public media into `public/media/`.
 6. Set `contentStatus` in `site.config.ts` to `draft` while working and `ready` only after facts and assets are confirmed.
-7. Run `npm run verify:delivery` and review the site at mobile and desktop widths.
+7. Run `npm run verify:delivery` and review every public route at desktop width. Mobile adaptation is a separate scope unless the user explicitly requests it.
+8. After Push, run `npm run verify:handoff -- --owner <owner> --repo <customer-repo>`; a local commit alone is not repository delivery.
 
 See `docs/content-contract.md` for the public content schema and `docs/verification.md` for automated checks.

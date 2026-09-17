@@ -19,11 +19,11 @@ For a conversational first-build request, do not require the user to invent a lo
 
 - Template selection occurs only in `scripts/create-site.mjs` by copying one complete starter.
 - Each template must remain independently installable and buildable.
-- All templates expose `npm run dev`, `npm run build`, `npm run verify`, and `npm run verify:delivery`.
+- All templates expose `npm run dev`, `npm run build`, `npm run verify`, `npm run verify:delivery`, and `npm run verify:handoff`.
 - All templates use `site.config.ts`, `src/data/company.json`, `src/content/products/*.md`, and `public/media/` for the same purposes.
 - Template-specific layout and presentation remain inside each template. Do not create cross-template runtime imports.
 - Never import commercial template source, copy, or media without an explicit redistribution license.
 - Never place customer materials or customer-specific code in the catalog repository. Each customer website has its own project directory and Git repository.
 - Never use the catalog's `.tmp/`, `materials/`, or any other catalog path for customer attachments, extracted pages, OCR output, contact sheets, or intake notes. Use runtime attachment storage or a customer task workspace outside the catalog.
 
-Run `npm run verify` after meaningful catalog or template changes. Visually inspect each template at approximately 390px and 1440px when browser tooling is available.
+Run `npm run verify` after meaningful catalog or template changes. Customer builds default to desktop-only QA at approximately 1440px; mobile adaptation and 390px QA occur only when the user explicitly includes them. When a catalog change alters responsive template presentation, inspect both desktop and mobile before releasing that template change.

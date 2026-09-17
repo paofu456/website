@@ -11,3 +11,5 @@ The output checker validates:
 - no localhost canonical URL is emitted
 
 `npm run verify:delivery` adds a release gate: `site.config.ts` must use `contentStatus: "ready"` and must not use `siteMode: "local"`.
+
+After committing and pushing a customer site, run `npm run verify:handoff -- --owner <owner> --repo <customer-repo>`. It requires an SSH `origin` for that customer repository, a clean worktree, no tracked private/generated files, and the same commit on local and remote `main`.

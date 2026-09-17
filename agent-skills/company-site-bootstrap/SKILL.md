@@ -1,75 +1,73 @@
 ---
 name: company-site-bootstrap
-description: Start a new customer-specific Astro company website through conversational material intake, fact-gap confirmation, catalog checkout, template selection, and independent repository setup. Use for a first build, including when the user has not uploaded files yet; do not use for edits inside an existing customer site.
+description: Start a new customer-specific Astro company website through conversational material intake, confirmed P0 facts, an isolated catalog checkout, template selection, and a private customer repository. Use for a first build; do not use for edits to an existing customer site.
 ---
 
 # Company site bootstrap
 
-Move a new customer from material intake to a separate, build-ready project without contaminating the shared catalog.
+Move a new customer from uploaded materials to a separate project with its own verified Git remote. Do not create a project before intake is confirmed, and do not treat a local commit as repository delivery.
 
-## Route the request before doing work
+## Route before acting
 
-- If this is a change to an existing customer site, stop using this skill and work from that customer's repository with `company-website`.
-- If this is a new site and no files or attachment paths were supplied, ask the user to upload the available PDF, Word, PowerPoint, spreadsheet, logo, product, project, and company images. End the current turn after that request. Do not clone the catalog, create a project, create a repository, or send a full questionnaire yet.
-- If files are attached, use the paths supplied by the runtime. Do not invent a material path and do not require the user to create a local directory.
-- If the task already supplies a real material directory, treat it as an automation entry point and use it without copying anything into the catalog.
+- Existing customer site: stop and use that site's `company-website` modify flow. Clone the customer repository directly when needed.
+- New site with no attachments: ask the user to upload available PDF, Word, PowerPoint, spreadsheet, logo, product, project, and company images, then end the turn. Do not invent a materials path, clone the catalog, or send a blank questionnaire.
+- New site with attachments: use the runtime-provided paths. Keep attachments, OCR, rendered pages, contact sheets, and intake notes outside the catalog.
 
-## Intake before scaffolding
+## Intake gate
 
-Read all supplied materials before asking questions. Extract confirmed facts, possible public assets, conflicts, and missing decisions. Then give the user a concise summary and ask one consolidated set of genuine gaps, classified as:
+Read the supplied materials before asking questions. For large PDFs, extract text in bulk and create a contact sheet or batch of thumbnails for image selection; do not render and inspect every page one at a time. If pages lack a text layer, state the exact limitation. Never claim a document was fully read unless every relevant page was actually covered by text extraction or visual review.
 
-- P0: blocks project creation or truthful website work;
-- P1: can use an explicitly stated fallback;
-- P2: can be deferred.
+Report four separate lists:
 
-P0 must cover the public company name, target customers, at least one real product or service, site language, one publishable inquiry contact, and the public-use boundary for supplied text and media. Do not infer authorization merely because a file was uploaded. Do not invent facts or ask for fields already present in the materials.
+1. facts explicitly confirmed by the user;
+2. facts stated in authorized source material;
+3. Agent inferences that still require confirmation;
+4. missing or conflicting facts.
 
-Wait for the user's answers when any P0 item or material conflict remains. Do not run `create-site` or create a customer remote repository before P0 is cleared and the public-use boundary is confirmed.
+Ask one consolidated question set for unresolved P0 items. P0 consists of the public company name, target customers, at least one real product or service, site language, one publishable inquiry contact, public-use permission for text and media, and every conflict affecting published content. Agent inference is never confirmation. Wait when any P0 item remains unresolved.
 
-Keep attachments and all extraction work outside the catalog. Never put customer files, extracted pages, OCR output, contact sheets, or intake notes in the catalog's `.tmp/`, `materials/`, templates, or any other catalog path. Use runtime attachment storage or a customer task workspace outside the catalog. After project creation, raw source material may be copied into the generated project's ignored `materials/` directory.
+## Use an isolated catalog checkout
 
-## Establish the catalog and customer workspaces
+For an external-Agent run or workflow acceptance test, always clone the operator catalog into an Agent-owned workspace. Do not reuse the operator's maintenance checkout even when it exists on the same computer. Reuse is allowed only when the user explicitly identifies that checkout as the intended trusted source.
 
-After intake is ready, obtain or discover:
+Require the operator-provided catalog SSH URL and an approved full commit or tag. Clone or fetch, check out that revision, confirm a clean worktree, then read only:
 
-- the operator-provided catalog repository URL or an existing catalog checkout;
-- an approved catalog commit or tag;
-- a destination directory for the independent customer project outside the catalog;
-- the customer repository SSH URL, or an authorized way to create that empty repository.
+- root `AGENTS.md`;
+- root `README.md`;
+- `docs/site-build-sop.md`;
+- `docs/onboarding.md`.
 
-If the catalog is remote, clone it. Do not create a Fork unless the user explicitly asks for one. Check out the approved revision, then read the catalog `AGENTS.md`, `README.md`, `docs/site-build-sop.md`, and `docs/onboarding.md`. Run `npm ci` and `npm run verify` before using the catalog.
-
-If no destination was specified, derive a stable customer slug from the confirmed company identity and choose a customer task/project location outside the catalog. State the chosen path before creating it. Never commit customer data, customer pages, credentials, tokens, or SSH keys to the catalog.
+Run `npm ci` and `npm run verify` without piping their output through `tail`, `grep`, or another command that could hide the exit code.
 
 ## Select and create
 
-Follow `docs/onboarding.md` and preserve the confirmed intake results. Choose exactly one template only after the P0 gate passes:
+Choose exactly one template after P0 is confirmed:
 
-- `lumen`: editorial whitespace and brand-led presentation;
-- `forge`: products, specifications, and catalog browsing;
-- `nexus`: B2B services, engineering capabilities, or multi-line companies.
+- `lumen`: image-led premium or design-focused brands;
+- `forge`: product catalogs and specification-heavy manufacturers;
+- `nexus`: B2B services, engineering groups, and multi-line companies.
 
-Respect the user's choice. Otherwise select by the site's primary conversion task and record the reason.
-
-Create the project outside the catalog and outside `templates/`:
+Generate the project outside the catalog:
 
 ```bash
 npm run create-site -- --template <lumen|forge|nexus> --target <customer-project-directory>
 ```
 
-Record the catalog URL, full source commit, template ID, confirmed facts, authorization boundary, audience, language, scope, and public contact in the generated project's `notes/requirements.md`. Put raw material in its ignored `materials/` directory and unresolved P1/P2 items in `notes/content-gaps.md`.
+Record the catalog SSH URL, full source commit, template ID, confirmed facts, authorization boundary, language, audience, scope, and contact in `notes/requirements.md`. Clearly label source-material facts and user confirmations. Put raw material in the ignored `materials/` directory only after project creation.
 
-## Create the customer repository
+## Create and attach the customer repository
 
-Only after intake and project generation, prepare one empty remote repository for that customer:
+A complete first-build workflow includes a new private customer repository, Commit, and Push unless the user explicitly requests local-only output. The repository must belong to the configured customer-site owner and must never be the catalog repository.
 
-- Use a supplied customer repository when one already exists.
-- If repository creation is explicitly in scope and the runtime provides an authorized API tool or token, check for a name collision and create a private empty repository.
-- On Gitee hosts, `GITEE_TOKEN` is the expected optional repository-creation credential. Read it only from the process environment, use it as an authorization header, check presence without printing its value, and never interpolate the literal value into a logged command, URL, file, note, or log.
-- SSH credentials can clone and push but cannot create a remote repository. If no repository or creation capability is available, state that exact limitation; do not redirect the catalog remote or claim that a push succeeded.
-- Read credentials only from the host's SSH or secret configuration. Never write a token, password, private key, or credential-bearing URL to project files, notes, logs, skills, or Git.
+When creating a Gitee repository, use `scripts/create-gitee-repo.mjs` from this skill. It reads `GITEE_TOKEN` from the process environment, verifies the authenticated owner, refuses name collisions, and creates a private empty repository. Never print or place the token in a URL, command argument, note, file, or Git remote.
 
-Initialize Git inside the generated customer directory and attach only the customer SSH remote:
+Example:
+
+```bash
+node <skill-directory>/scripts/create-gitee-repo.mjs --owner website-bot --repo <customer-repo> --ssh-host gitee-website-bot
+```
+
+Initialize the generated project and attach only the returned customer SSH URL:
 
 ```bash
 git init -b main
@@ -77,10 +75,10 @@ git remote add origin <customer-repository-ssh-url>
 git remote -v
 ```
 
-Do not copy the catalog `.git` directory and do not change the catalog's `origin`.
+Stop if the owner, repository name, or remote URL differs from the intended customer repository. Do not copy the catalog `.git` directory or alter the catalog's `origin`.
 
-## Continue to the website build
+## Hand off to the generated project
 
-Enter the generated project and treat it as a separate repository. Read its `AGENTS.md` and `skills/company-website/SKILL.md`, then follow that skill through content replacement, page work, verification, commit, and push when Git delivery is in scope. Do not stop after scaffolding when the user requested a finished MVP.
+Enter the generated project and read its `AGENTS.md`, `skills/company-website/SKILL.md`, and first-build reference. Do not recursively inspect every page and component. Start with the documented content-contract files; inspect page or component code only when a requested layout change or a concrete verification failure requires it.
 
-The customer project must have its own Git repository and remote. Never push customer-specific changes back to the catalog. Only a reusable fix that benefits the template catalog belongs in a separate catalog change.
+Continue through content replacement, desktop visual QA, verification, Commit, Push, and `npm run verify:handoff`. Without the intended `origin`, a successful Push, and a matching remote commit, a local commit is only a local draft, not a completed delivery.

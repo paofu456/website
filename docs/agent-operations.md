@@ -9,7 +9,7 @@
           ↓ 没有资料时，Agent 请求用户上传附件并等待
 读取附件、提取事实、一次性补齐 P0 并确认公开授权
           ↓
-Clone/复用统一基座并固定批准的 commit/tag
+外部 Agent Clone 统一基座并固定批准的 commit/tag
           ↓ 验证基座
 选择 lumen / forge / nexus，create-site
           ↓ 在基座目录之外生成
@@ -42,7 +42,7 @@ npm run install:agent-skills -- --target <agent-skills-directory>
 1. 如果对话中尚未收到资料，Agent 先请用户上传现有 PDF、Word、PPT、表格、Logo 和图片，然后等待；不要要求用户编造本地资料目录。
 2. 收到附件后使用运行时提供的真实附件路径。先完整消化资料，再一次性询问真正缺失的 P0 信息和公开授权。P0 未确认时不得创建项目或远程仓库。
 3. 客户附件、PDF 页面、OCR、联系表和 intake notes 必须位于运行时附件区或 catalog 外的客户任务工作区；禁止写入 catalog 的 `.tmp/`、`materials/` 或任何其他目录。
-4. P0 就绪后，Agent Clone 或复用本机的 `website` catalog，检出运营方批准的 commit/tag，运行 `npm ci` 和 `npm run verify`。
+4. P0 就绪后，外部 Agent 将 `website` catalog Clone 到自己的独立 workspace，检出运营方批准的 commit/tag，运行 `npm ci` 和 `npm run verify`。工作流验收测试即使在运营方本机运行，也不得复用运营方维护目录；只有用户明确指定可信现有 checkout 时才可复用。
 5. 按 `docs/onboarding.md` 选择一个模板，并从 catalog 运行：
 
    ```bash
@@ -50,10 +50,10 @@ npm run install:agent-skills -- --target <agent-skills-directory>
    ```
 
 6. 把原始资料和内部记录放到客户项目的 `materials/`、`notes/`；`materials/` 默认不进入 Git。
-7. 创建该客户的空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。
-8. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`，继续做到完整 MVP，不能停在复制模板。
-9. 通过普通验证，执行并解释交付验证；只报告实际完成的视觉检查。
-10. 只暂存本次交付文件，Commit 后 Push 到客户仓库。不得把客户内容推回基座。
+7. 默认创建该客户的私有空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。只有用户明确要求仅本地输出时才可跳过，并必须称为本地草稿。
+8. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`。按内容契约直接替换数据、Markdown、素材和主题，不遍历阅读全部组件；只在具体布局需求或验证缺陷出现时读取相关页面或组件。
+9. 通过普通验证，执行并解释交付验证；默认只做约 1440px 桌面端 QA，移动端只有在用户明确加入范围时才检查。
+10. 只暂存本次交付文件，Commit 后 Push 到客户仓库，再运行 `npm run verify:handoff -- --owner <owner> --repo <customer-repo>`。不得把客户内容推回基座。
 
 初始化示例：
 
@@ -63,6 +63,8 @@ git init -b main
 git remote add origin <customer-repository-ssh-url>
 git remote -v
 ```
+
+本地 Commit 不是远端交付。只有 Push 成功且 `verify:handoff` 证明远端目标分支与本地 HEAD 一致，才能报告仓库交付完成。
 
 ## 修改已有客户网站
 

@@ -54,4 +54,4 @@ Before delivery run:
 npm run verify:delivery
 ```
 
-If browser tooling is available, inspect at approximately 390px and 1440px widths. Do not claim visual verification unless it was actually performed.
+The default acceptance scope is desktop-only at approximately 1440px. Keep the starter's existing responsive behavior, but do not spend time on mobile adaptation or 390px QA unless the user explicitly adds mobile work. Check every public route, navigation and CTA, image loading, horizontal overflow, and browser console output. Do not claim visual verification unless it was actually performed.
