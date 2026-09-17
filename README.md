@@ -41,6 +41,10 @@ For an end-to-end customer build, follow [`docs/site-build-sop.md`](docs/site-bu
 
 The operator maintains one catalog repository. Every remote Agent clones that same repository and pins an approved commit; it does not need to create another Fork. The selected customer website is generated outside the catalog and pushed to a separate customer repository. Ten customers therefore mean ten independent customer repositories, not ten companies inside this catalog.
 
+The fixed first-build order is: clone or update the catalog, generate the customer project, create an empty customer remote repository, initialize Git in the customer project, implement and verify the website, then commit and push to that customer remote. An existing customer website is modified by cloning its own repository directly; do not regenerate it from the catalog.
+
+SSH authenticates clone and push to repositories that already exist. Creating a new remote repository requires an authorized provider API token or a central repository-provisioning service. Credentials stay in the Agent host's SSH/secret configuration and are never stored in this repository or its skills.
+
 Portable Agent skills live in `agent-skills/`:
 
 - `company-site-bootstrap` gets or reuses the catalog, performs intake and creates the customer project.

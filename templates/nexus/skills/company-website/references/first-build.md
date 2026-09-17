@@ -14,6 +14,7 @@
 - 已进行范围内的视觉检查；
 - `npm run verify:delivery` 已执行并正确解释；
 - `notes/content-gaps.md` 记录仍待补充的内容；
+- 本次包含 Git 交付时，客户仓库 `origin` 已配置，验证后已 Commit 并 Push；
 - 最终回复给出路径、运行方法、验证结果和未完成范围。
 
 部署、CMS、后台、CDN、数据库和在线表单服务不是默认任务。
@@ -35,6 +36,7 @@
 9. `notes/requirements.md`
 10. `notes/content-gaps.md`
 11. `git status --short`
+12. `git remote -v`
 
 记录模板原始公司名、演示产品名和现有路由，后续用于搜索残留。不要覆盖已有未提交的用户改动。
 
@@ -342,6 +344,8 @@ npm run verify:delivery
 
 ## 10. Git 与交付
 
+首次建站应由 bootstrap 阶段在客户项目中完成 `git init`，并将客户空仓库的 SSH URL 设置为 `origin`。如果没有 `origin`，先确认任务是否只要求本地交付；不要把 catalog 设置为客户项目远程，也不要把 catalog 的 `.git` 复制过来。
+
 确认 `.gitignore` 排除：
 
 - `materials/`
@@ -351,7 +355,9 @@ npm run verify:delivery
 - `.tmp/`
 - 本地环境变量
 
-提交前运行 `git status --short`，不得出现原始画册、临时提取文件、截图、依赖或构建产物。不要覆盖或清理不属于当前任务的用户改动。
+提交前运行 `git status --short` 和 `git remote -v`，不得出现原始画册、临时提取文件、截图、依赖或构建产物。不要覆盖或清理不属于当前任务的用户改动。
+
+当本次范围包含 Git 交付时，只在 `npm run verify` 通过后暂存本次网站文件、创建说明准确的 Commit，并 Push 到客户 `origin` 的指定分支。不得把客户内容 Push 到 catalog，不得在日志或 remote URL 中嵌入 Token。
 
 最终回复必须包含：
 
@@ -362,6 +368,7 @@ npm run verify:delivery
 - 实际视觉检查范围；
 - delivery gate 结果及原因；
 - Git 状态或提交 ID；
+- 实际 Push 的客户远程和分支，或未 Push 的明确原因；
 - 内容缺口；
 - 明确未做的部署、后台、表单服务或延期端适配。
 
@@ -379,6 +386,7 @@ npm run verify:delivery
 - [ ] 范围内视觉检查真实执行。
 - [ ] delivery gate 已执行并解释。
 - [ ] Git 没有跟踪私有或生成文件。
+- [ ] Git 交付在范围内时，已 Commit 并 Push 到客户 `origin`。
 - [ ] 交付回复说明完成项、缺口和未做范围。
 
 任一项为否时，不要宣称整个 MVP 已完成。

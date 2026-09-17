@@ -11,9 +11,11 @@
           ↓ 读取该 Agent 手中的客户资料
 选择 lumen / forge / nexus，create-site
           ↓ 在基座目录之外生成
-一家客户一个独立项目、一个独立 Git 仓库
+创建该客户的空远程仓库，初始化客户项目 Git
           ↓
 company-website Skill 完成内容、页面和验收
+          ↓
+Commit 并 Push 到该客户仓库
 ```
 
 十个 Agent 可以 Clone 同一个只读基座；十家公司必须产生十个互不相干的客户仓库。客户项目不要求与基座保持 Git Fork 关系。
@@ -45,9 +47,31 @@ npm run install:agent-skills -- --target <agent-skills-directory>
    ```
 
 5. 把允许进入工作区的资料和内部记录放到客户项目的 `materials/`、`notes/`；`materials/` 默认不进入 Git。
-6. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`，继续做到完整 MVP，不能停在复制模板。
-7. 通过普通验证，执行并解释交付验证；只报告实际完成的视觉检查。
-8. 在客户项目内初始化 Git，并推送到该客户自己的空仓库。客户仓库的 `origin` 不能指向基座仓库。
+6. 创建该客户的空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。
+7. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`，继续做到完整 MVP，不能停在复制模板。
+8. 通过普通验证，执行并解释交付验证；只报告实际完成的视觉检查。
+9. 只暂存本次交付文件，Commit 后 Push 到客户仓库。不得把客户内容推回基座。
+
+初始化示例：
+
+```bash
+cd <customer-project-directory>
+git init -b main
+git remote add origin <customer-repository-ssh-url>
+git remote -v
+```
+
+## 修改已有客户网站
+
+已有客户站不再经过 catalog 和 `create-site`。Agent 直接用 SSH Clone 该客户仓库，读取其中的 `AGENTS.md` 和 `skills/company-website/SKILL.md`，选择修改路径，检查现有分支与未提交改动后实施、验证、Commit 并 Push 到原 `origin`。不要重新选择模板、覆盖整个项目或更换远程仓库。
+
+## SSH 与仓库创建权限
+
+- 每台服务器使用自己的 SSH 私钥；只把公钥添加到建站专用 Gitee 账户，不在多台服务器复制同一私钥。
+- SSH 负责访问已经存在的基座仓库和客户仓库，远程地址必须使用 SSH URL，不能继续使用会提示账号密码的 HTTPS URL。
+- SSH 不能创建新的 Gitee 仓库。需要 Agent 自动创建时，由运行环境提供最小权限 API Token，或由中央仓库创建服务返回空仓库的 SSH URL。
+- Token、私钥和账号密码只存在于服务器的 SSH/Secret 配置中，不写入 Skill、项目文件、命令输出或 Git。
+- 创建仓库前检查名称是否已存在；存在时不得覆盖或复用为另一个客户。
 
 ## 变更归属
 

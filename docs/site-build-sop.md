@@ -1,6 +1,6 @@
 # 企业独立站构建 SOP（Agent 版）
 
-版本 v1.2 · 2026-09-17
+版本 v1.3 · 2026-09-17
 
 适用场景：用户提供企业资料，Agent 使用本仓库的 Astro + Tailwind 基座，为一个客户创建独立的企业网站 MVP。
 
@@ -40,6 +40,8 @@
 选择模板并复制到独立目录
   ↓
 建立 requirements / content-gaps
+  ↓
+创建空客户仓库并初始化客户项目 Git
   ↓
 先数据与素材，后组件与页面
   ↓
@@ -116,7 +118,8 @@ Agent 服务器上的 catalog checkout
         ↓ 固定批准的 commit/tag
         ↓ create-site 选择一个模板
 客户独立站目录
-        ↓ 初始化 Git 并推送
+        ↓ 创建空客户仓库并初始化 Git
+        ↓ 修改、验证、Commit、Push
 客户自己的 Git 仓库
 ```
 
@@ -175,6 +178,25 @@ cd ../client-website
 npm install
 ```
 
+### 创建客户远程仓库并初始化 Git
+
+客户项目生成后、开始客户页面修改前，为它准备一个新的空远程仓库。SSH 只能 Clone 和 Push 已存在的仓库，不能创建 Gitee 仓库：
+
+- 任务已提供客户仓库时，直接使用其 SSH URL；
+- Agent 获得明确授权且运行环境提供 API Token/仓库创建工具时，先检查名称冲突，再创建空仓库；
+- 只配置 SSH 而仓库尚不存在时，必须由运营方或中央服务先创建，不能假装 Push 已完成；
+- Token 和 SSH 私钥不得写入项目、Skill、notes、日志或 Git。
+
+在客户项目中执行：
+
+```bash
+git init -b main
+git remote add origin <customer-repository-ssh-url>
+git remote -v
+```
+
+此时 `origin` 必须是客户仓库，不能指向 catalog。不要修改 catalog checkout 的 `origin`，也不要把 catalog 的 `.git` 目录复制到客户项目。
+
 在 `notes/requirements.md` 记录来源信息：
 
 ```text
@@ -195,7 +217,7 @@ templateSourceCommit: <full-commit-sha>
 
 从此只在客户项目中实施客户内容，不回写模板的演示页面。
 
-客户项目验证通过后，为它创建新的远程仓库并设置为客户项目的 `origin`。基座仓库与客户站仓库不能使用同一个 origin。
+如果任务是修改已有客户网站，直接 Clone 该客户仓库并按项目内 `company-website` Skill 的修改路径工作；不要再次运行 `create-site`。
 
 ---
 
@@ -426,7 +448,7 @@ materials/
 .env*
 ```
 
-执行 `git status --short`，确认没有画册原件、临时截图、PDF 提取目录、依赖或构建产物进入提交。只有在项目通过普通验证后，才建立初始基线提交。
+Git 仓库和客户 `origin` 可以在编辑前初始化，但只有项目通过普通验证后才能 Commit 和 Push。执行 `git status --short`，确认没有画册原件、临时截图、PDF 提取目录、依赖或构建产物进入提交。
 
 不要用 destructive Git 命令清理用户改动。遇到已有未提交修改时，先辨认所有权并绕开无关内容。
 
@@ -464,6 +486,7 @@ materials/
 - [ ] 如果我在远程服务器，我已 Clone 运营方基座并固定 source commit。
 - [ ] 我记录了 catalog URL、模板 ID 和 source commit。
 - [ ] 我在 catalog 外创建了独立客户目录。
+- [ ] 客户项目的 `origin` 是该客户仓库的 SSH URL，而不是 catalog。
 - [ ] 我读取了客户项目的 `AGENTS.md` 和 skill。
 - [ ] 我先提取资料，再询问缺口。
 - [ ] 我记录了公开授权范围。
@@ -477,6 +500,7 @@ materials/
 - [ ] 我检查了实际 viewport，而不是只看截图尺寸。
 - [ ] 我运行了 `npm run verify:delivery` 并正确解释结果。
 - [ ] Git 没有跟踪原始资料、依赖、构建物或临时文件。
+- [ ] 若本次范围包含 Git 交付，我已在验证通过后 Commit 并 Push 到客户仓库。
 - [ ] 最终回复说明了完成项、未完成项和缺口。
 
 任何一项为“否”时，不要宣称整个 MVP 已完成。
