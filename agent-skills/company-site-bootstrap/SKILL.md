@@ -9,7 +9,14 @@ Move a new customer from uploaded materials to a separate project with its own v
 
 ## Load operator defaults
 
-Before asking for repository details, look for `site-builder.json` in the current Hermes Profile root. For an installed Skill at `skills/website/company-site-bootstrap`, the Profile root is three directories above the Skill directory. Do not scan unrelated home or system directories. Task-specific user input overrides these defaults.
+Before asking for repository details, resolve `site-builder.json` in this order:
+
+1. a path explicitly supplied in the current task;
+2. the absolute path named by the `SITE_BUILDER_CONFIG` environment variable;
+3. the current Agent framework's documented operator-config location;
+4. for Hermes compatibility, the Profile root three directories above an installed `skills/website/company-site-bootstrap` directory.
+
+Use the first existing file only. Do not scan unrelated home or system directories. Task-specific user input overrides configured defaults. A non-Hermes Agent should normally use `SITE_BUILDER_CONFIG` so the Skill does not depend on a framework-specific directory layout.
 
 The non-secret configuration may provide:
 
