@@ -15,7 +15,7 @@ Every directory under `templates/` is a complete, independent website starter.
 
 ## Stable commands
 
-Every generated project provides `npm run dev`, `npm run build`, `npm run verify`, and `npm run verify:delivery`.
+Every generated project provides `npm run dev`, `npm run build`, `npm run verify:quick`, `npm run verify`, and `npm run verify:delivery`. Quick verification does not build; each final verification command performs its own single build.
 
 ## Independence
 

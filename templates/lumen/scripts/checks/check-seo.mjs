@@ -12,8 +12,12 @@ export function checkSeo(pages) {
     if (headings.length !== 1) errors.push(`${page.url}: expected one h1, found ${headings.length}`);
 
     for (const image of images) {
-      if (!/\salt=["'][^"']*["']/i.test(image)) {
+      const alt = image.match(/\salt=["']([^"']*)["']/i);
+      const decorative = /\saria-hidden=["']true["']/i.test(image) || /\srole=["'](?:none|presentation)["']/i.test(image);
+      if (!alt) {
         errors.push(`${page.url}: image is missing an alt attribute`);
+      } else if (!alt[1].trim() && !decorative) {
+        errors.push(`${page.url}: image has empty alt text without explicit decorative semantics`);
       }
     }
   }

@@ -9,7 +9,7 @@
 - P0 全部由用户或获准公开的资料确认，Agent 推断没有被写成确认事实；
 - 资料冲突已由用户确认，或相关内容已从公开页面省略；
 - 演示公司、产品、素材和联系方式已移除；
-- `npm run verify` 真实退出码为 0；
+- 与交付范围对应的最终命令（本地 `npm run verify` 或生产 `npm run verify:delivery`）真实退出码为 0；
 - 桌面端页面、导航、图片和浏览器控制台已实际检查；
 - 客户 `origin` 指向独立客户仓库；
 - Commit 已 Push，`npm run verify:handoff` 确认远端分支与本地 HEAD 一致；
@@ -49,7 +49,7 @@ siteMode: "local"
 contentStatus: "draft"
 ```
 
-`contentStatus: "ready"` 只表示公开内容已经确认且普通验证和范围内视觉检查通过，不表示已经部署。
+`contentStatus: "ready"` 表示公开内容已经确认、演示内容已移除并准备执行最终验收，不表示构建、视觉检查或部署已经完成。最终验证或范围内视觉检查失败时不得交付。
 
 ## 4. 事实和素材
 
@@ -99,10 +99,10 @@ npm ci --include=optional
 
 不要通过连续执行 `npm install --no-save <native-binding>` 逐个补平台绑定，也不要仅为当前机器通过而修改锁文件。同一个失败命令只有在完成一项明确修复后才允许重试一次；第二次仍失败时，记录根因和未通过的门槛，不得继续安装—验证循环。
 
-每个有意义的内容批次完成后直接运行：
+每个有意义的编辑批次完成后运行不构建产物的快速检查：
 
 ```bash
-npm run verify
+npm run verify:quick
 ```
 
 禁止使用可能隐藏退出码的管道，例如：
@@ -111,15 +111,20 @@ npm run verify
 npm run verify 2>&1 | tail
 ```
 
-需要缩短日志时，先保存命令退出码，再单独读取日志。不得删除检查、降低 schema 或忽略失败。不要在每个微小文本改动后重复全套验证；应把配置和公司数据、内容、素材、样式等分别作为完整批次。
+需要缩短日志时，先保存命令退出码，再单独读取日志。不得删除检查、降低 schema 或忽略失败。不要在每个微小文本改动后重复检查；应把配置和公司数据、内容、素材、样式等分别作为完整批次。
 
-在 `siteMode: "local"` 时仍执行 `npm run verify:delivery` 并准确说明 production gate 的结果；不要伪造域名让它通过。
+最终只选择一个会构建站点的验收命令，禁止先后重复执行 `build`、`verify` 和 `verify:delivery`：
+
+- 本地或明确不部署：运行 `npm run verify`；
+- 已有真实域名且本轮包含生产交付：运行 `npm run verify:delivery`。
+
+`verify:delivery` 已包含普通验证。`siteMode: "local"` 时不为了得到预期失败而运行它，也不要伪造域名让它通过；最终回复说明 production gate 不在本轮范围。
 
 ## 7. 桌面端浏览器 QA
 
 默认只验收约 `1440 × 900` 的桌面端。保留模板已有响应式能力，但不主动进行移动端适配或 390px 验收；只有用户明确加入移动端范围时才增加该项。
 
-先用终端完成 `build`、`verify` 和所有公开路由的批量 HTTP 检查，再启动一个由当前任务拥有的 Dev Server 做视觉检查。视觉检查只打开：
+先完成上面选定的单次最终构建和所有公开路由的批量 HTTP 检查，再启动一个由当前任务拥有的 Dev Server 做视觉检查。视觉检查只打开：
 
 - `/`
 - `/products/`
@@ -172,7 +177,7 @@ npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
 - 客户项目绝对路径；
 - 客户 Gitee 仓库 SSH 地址；
 - 本地和远端一致的 commit；
-- `npm run verify` 与 `verify:delivery` 的真实结果；
+- 实际执行的最终验证命令及真实结果；未执行 production gate 时说明原因；
 - 实际检查过的桌面路由和尺寸；
 - 尚未解决的 P1/P2 内容缺口；
 - 明确未做的部署、域名、后台、在线表单和移动端专项适配。

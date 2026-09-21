@@ -19,7 +19,7 @@ For a conversational first-build request, do not require the user to invent a lo
 
 - Template selection occurs only in `scripts/create-site.mjs` by copying one complete starter.
 - Each template must remain independently installable and buildable.
-- All templates expose `npm run dev`, `npm run build`, `npm run verify`, `npm run verify:delivery`, and `npm run verify:handoff`.
+- All templates expose `npm run dev`, `npm run build`, `npm run verify:quick`, `npm run verify`, `npm run verify:delivery`, and `npm run verify:handoff`.
 - All templates use `site.config.ts`, `src/data/company.json`, `src/content/products/*.md`, and `public/media/` for the same purposes.
 - Template-specific layout and presentation remain inside each template. Do not create cross-template runtime imports.
 - Never import commercial template source, copy, or media without an explicit redistribution license.

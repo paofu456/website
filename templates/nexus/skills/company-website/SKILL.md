@@ -27,7 +27,7 @@ Raw inputs stay in `materials/`; internal facts and gaps stay in `notes/`; only 
 
 For a first build, preserve the selected template and use the content contract first. Do not recursively read or explain the whole template. Inspect `src/pages/` or `src/components/` only for a requested layout change or a specific defect found during verification.
 
-Follow the implementation order: configuration and company data, real content entries, authorized media, theme tokens, then only the specific page/component needed by a concrete requirement or failed check. After each meaningful batch, run the relevant verification and keep a compact checkpoint. If a Patch fails because its old text is not present, re-read the current file, reassess the smallest change, and apply one new patch; never repeat the stale patch.
+Follow the implementation order: configuration and company data, real content entries, authorized media, theme tokens, then only the specific page/component needed by a concrete requirement or failed check. After each meaningful editing batch, run `npm run verify:quick` and keep a compact checkpoint. If a Patch fails because its old text is not present, re-read the current file, reassess the smallest change, and apply one new patch; never repeat the stale patch.
 
 Run verification commands directly so their real exit codes are preserved. The current acceptance scope is desktop-only unless the user explicitly adds mobile work. A complete first build includes Commit and Push to the existing customer `origin` unless the user explicitly requested local-only output. Never push customer files to the catalog repository.
 
@@ -35,9 +35,9 @@ For a generated project or a dependency recovery, use its lockfile and run `npm 
 
 ## Efficient verification and browser QA
 
-Use two passes:
+Use two passes. Do not run `npm run build`, `npm run verify`, and `npm run verify:delivery` in sequence because both verification commands already build the site.
 
-1. **Terminal pass first.** Run `npm run build`, `npm run verify`, and the delivery check. Use a batch HTTP check or the project's available route checker for all public routes, recording only status, title, and failed resources.
+1. **Terminal pass first.** Choose exactly one final build command: run `npm run verify` for a local/no-deployment result, or `npm run verify:delivery` when production delivery with a real canonical domain is in scope. Use a batch HTTP check or the project's available route checker for all public routes, recording only status, title, and failed resources.
 2. **Visual pass second.** At approximately `1440 × 900`, inspect only `/`, `/products/`, one representative detail route, `/about/`, and `/contact/`. Take at most one full-page screenshot and one targeted DOM/layout check per page. Add more pages only when a defect or an explicit user requirement requires it. Do not perform mobile QA unless it is explicitly in scope.
 
 Browser calls must return a compact record: route, status, title, key element counts, overflow/errors, and screenshot path. Do not return full HTML, full DOM trees, accessibility dumps, network bodies, or repeated screenshots. Keep screenshots and browser artifacts in ignored temporary directories. Start one task-owned Dev Server, confirm it is healthy, and stop only that server after QA. External image or URL checks get at most one retry; an unavailable external site must not block a build that uses authorized local media.

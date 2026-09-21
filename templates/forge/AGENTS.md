@@ -42,16 +42,18 @@ Do not duplicate company phone numbers, email addresses, or descriptions inside 
 
 ## Required checks
 
-After each meaningful change run:
+After each meaningful editing batch run the no-build check:
 
 ```bash
-npm run verify
+npm run verify:quick
 ```
 
-Before delivery run:
+For final acceptance choose exactly one build command. Use `npm run verify` for local/no-deployment work, or use the stricter command below for production delivery with a real canonical domain:
 
 ```bash
 npm run verify:delivery
 ```
+
+Do not run `build`, `verify`, and `verify:delivery` in sequence; both final verification commands already build the site.
 
 The default acceptance scope is desktop-only at approximately 1440px. Keep the starter's existing responsive behavior, but do not spend time on mobile adaptation or 390px QA unless the user explicitly adds mobile work. Check every public route, navigation and CTA, image loading, horizontal overflow, and browser console output. Do not claim visual verification unless it was actually performed.

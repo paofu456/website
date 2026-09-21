@@ -47,7 +47,7 @@
   ↓
 先数据与素材，后组件与页面
   ↓
-循环执行 build + verify
+编辑批次执行 verify:quick，最终只构建验收一次
   ↓
 桌面/手机视觉检查与运行时检查
   ↓
@@ -149,7 +149,7 @@ git checkout --detach <approved-tag-or-commit>
 
 Clone 前先执行一次 `git ls-remote <catalog-repository-url> HEAD`。SSH 密钥和 `~/.ssh/config` 由运营环境管理；建站 Agent 不生成、不复制私钥，也不重写 SSH 配置。连接失败时原样报告错误并停止。
 
-批准 commit 已由 catalog CI 验证时，到这里直接创建客户项目，不在每个客户任务里再次安装根依赖或执行 catalog 全量 `npm run verify`。全量验证会构建三套模板，属于 catalog 发布/CI。只有来源尚未经过 CI 验证或正在维护 catalog 时，才在根目录执行：
+批准 commit 已由运营方或 catalog CI 验证，并在 Profile 的 `site-builder.json` 中把该精确版本标为 `operator-verified` 时，到这里直接创建客户项目，不在每个客户任务里再次安装根依赖或执行 catalog 全量 `npm run verify`。全量验证会构建三套模板，属于 catalog 发布。只有来源尚未验证或正在维护 catalog 时，才在根目录执行：
 
 ```bash
 npm ci --include=optional
@@ -362,10 +362,10 @@ public/media/  已确认可以公开、已经重命名和优化的素材
 
 ## 9. 阶段 G：小步验证
 
-每完成一个有意义的完整批次就执行：
+每完成一个有意义的编辑批次就执行不生成构建产物的快速检查：
 
 ```bash
-npm run verify
+npm run verify:quick
 ```
 
 推荐批次：
@@ -377,7 +377,7 @@ npm run verify
 5. SEO；
 6. 最终修正。
 
-发现失败时立即修，不要积累到最后，也不要在每个微小文本改动后重复全套验证。错误必须按根因处理，不要删除检查脚本或降低校验标准。验证命令必须直接执行并保留真实退出码；禁止使用 `npm run verify 2>&1 | tail` 一类可能由最后一个管道命令掩盖失败的写法。同一失败命令只可在完成明确修复后重试一次；再次失败就记录根因和未通过的门槛，停止重复安装—验证循环。
+发现失败时立即修，不要积累到最后，也不要在每个微小文本改动后重复检查。错误必须按根因处理，不要删除检查脚本或降低校验标准。验证命令必须直接执行并保留真实退出码；禁止使用 `npm run verify 2>&1 | tail` 一类可能由最后一个管道命令掩盖失败的写法。同一失败命令只可在完成明确修复后重试一次；再次失败就记录根因和未通过的门槛，停止重复安装—验证循环。
 
 ### 交付前文本搜索
 
@@ -431,13 +431,20 @@ rg -n -i "demo|starter|lorem|placeholder|模板演示公司名" src public site.
 
 ## 11. 阶段 I：状态与交付门槛
 
-当公开事实和素材已经确认、演示内容已经移除、普通验证通过后，才将：
+当公开事实和素材已经确认、演示内容已经移除且 `verify:quick` 通过后，在最终构建前将：
 
 ```ts
 contentStatus: "ready"
 ```
 
-交付前执行：
+这表示内容进入待交付状态，不代表已经验收完成；随后选择的最终验证和桌面 QA 仍必须通过，失败时不得交付。
+
+最终验收只执行一个会构建站点的命令：
+
+- 本地预览或用户明确不部署：`npm run verify`；
+- 已提供真实域名且本轮包含生产交付：`npm run verify:delivery`。
+
+`verify:delivery` 已包含普通构建和全部静态检查，不要先执行 `npm run build` 或 `npm run verify` 再执行它。生产交付命令为：
 
 ```bash
 npm run verify:delivery
@@ -448,7 +455,7 @@ npm run verify:delivery
 | 场景 | 正确处理 |
 |---|---|
 | 用户要求部署且已给真实域名 | 配置 production 与 canonical，再通过 delivery gate |
-| 用户明确不部署 | 保持 `siteMode: "local"` 和 noindex；如实说明 delivery gate 只因非生产模式失败 |
+| 用户明确不部署 | 保持 `siteMode: "local"` 和 noindex；执行 `npm run verify`，说明 production gate 不在本轮范围 |
 | 内容仍有未确认 P0 | 保持 `contentStatus: "draft"`，不能称为交付完成 |
 | 只有 P1/P2 缺口 | 采用已记录的降级方案，可以交付 MVP |
 
@@ -497,9 +504,9 @@ npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
 1. 项目绝对路径；
 2. 已完成页面和真实内容范围；
 3. 本地启动命令和访问地址；
-4. `npm run verify` 结果；
+4. 实际执行的最终验证命令及结果；
 5. 实际做过的桌面视觉检查；移动端只有在明确纳入范围且实际执行时才报告；
-6. `verify:delivery` 是否通过，以及失败是否属于明确的非部署范围；
+6. `verify:delivery` 是否在范围内；未执行时说明本轮不包含生产发布；
 7. Git 状态或提交 ID；
 8. 仍存在的内容缺口；
 9. 明确未做的部署、后台、表单服务或手机端优化。
@@ -525,9 +532,9 @@ npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
 - [ ] 公司联系方式只存在于统一数据源。
 - [ ] 公共图片都在 `public/media/` 且有 alt。
 - [ ] 空字段对应的区块已隐藏。
-- [ ] 我在每个重要完整批次后运行了 `npm run verify`，且没有对同一失败无限重试。
+- [ ] 我在每个重要编辑批次后运行了 `npm run verify:quick`，且没有对同一失败无限重试。
 - [ ] 我检查了实际 viewport，而不是只看截图尺寸。
-- [ ] 我运行了 `npm run verify:delivery` 并正确解释结果。
+- [ ] 我只运行了一个最终构建命令：本地 `verify` 或生产 `verify:delivery`，并正确解释结果。
 - [ ] Git 没有跟踪原始资料、依赖、构建物或临时文件。
 - [ ] 除非用户明确要求仅本地输出，我已在验证通过后 Commit、Push，并通过 `verify:handoff`。
 - [ ] 最终回复说明了完成项、未完成项和缺口。

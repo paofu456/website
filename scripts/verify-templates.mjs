@@ -61,6 +61,18 @@ for (const templateId of templateIds) {
   }
 
   const packageManifest = JSON.parse(fs.readFileSync(path.join(directory, "package.json"), "utf8"));
+  if (packageManifest.scripts?.["verify:quick"] !== "astro check") {
+    console.error(`[fail] ${templateId}: missing no-build verify:quick package script`);
+    failed = true;
+  }
+  if (packageManifest.scripts?.verify !== "npm run build && node scripts/verify.mjs") {
+    console.error(`[fail] ${templateId}: verify must perform exactly one build before static checks`);
+    failed = true;
+  }
+  if (packageManifest.scripts?.["verify:delivery"] !== "npm run build && node scripts/verify.mjs --delivery") {
+    console.error(`[fail] ${templateId}: verify:delivery must perform exactly one build before delivery checks`);
+    failed = true;
+  }
   if (packageManifest.scripts?.["verify:handoff"] !== "node scripts/verify-handoff.mjs") {
     console.error(`[fail] ${templateId}: missing verify:handoff package script`);
     failed = true;

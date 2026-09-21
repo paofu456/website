@@ -7,6 +7,24 @@ description: Start a new customer-specific Astro company website through convers
 
 Move a new customer from uploaded materials to a separate project with its own verified Git remote. Do not create a project before intake is confirmed, and do not treat a local commit as repository delivery.
 
+## Load operator defaults
+
+Before asking for repository details, look for `site-builder.json` in the current Hermes Profile root. For an installed Skill at `skills/website/company-site-bootstrap`, the Profile root is three directories above the Skill directory. Do not scan unrelated home or system directories. Task-specific user input overrides these defaults.
+
+The non-secret configuration may provide:
+
+```json
+{
+  "catalogUrl": "git@gitee-host:owner/website.git",
+  "catalogRef": "approved-full-commit-or-tag",
+  "catalogVerification": "operator-verified",
+  "giteeOwner": "owner",
+  "giteeSshHost": "gitee-host"
+}
+```
+
+Require non-empty strings for all five fields before using the file. `catalogVerification: "operator-verified"` means the operator has already run catalog verification for that exact `catalogRef`; it enables the fast path below. This file must never contain a token, password, private key, Feishu credential, or customer fact. Report only the selected URL, ref, owner, and SSH host.
+
 ## Route before acting
 
 - Existing customer site: stop and use that site's `company-website` modify flow. Clone the customer repository directly when needed.
@@ -39,7 +57,7 @@ At the end of each phase, write a short checkpoint containing the phase, absolut
 
 For an external-Agent run or workflow acceptance test, always clone the operator catalog into an Agent-owned workspace. Do not reuse the operator's maintenance checkout even when it exists on the same computer. Reuse is allowed only when the user explicitly identifies that checkout as the intended trusted source.
 
-Require the operator-provided catalog SSH URL and an approved full commit or tag. Clone or fetch, check out that revision, confirm a clean worktree, then read only:
+Require the operator-provided or Profile-configured catalog SSH URL and an approved full commit or tag. Clone or fetch, check out that revision, confirm a clean worktree, then read only:
 
 - root `AGENTS.md`;
 - root `README.md`;
@@ -48,7 +66,7 @@ Require the operator-provided catalog SSH URL and an approved full commit or tag
 
 SSH access is operator-managed. Before cloning, run `git ls-remote <catalog-repository-url> HEAD` once as a non-destructive preflight. If it fails, report the exact SSH error and stop. Never generate or copy an SSH private key, rewrite `~/.ssh/config`, or request approval to repair host credentials from this workflow.
 
-When the pinned commit is both operator-approved and already verified by catalog CI, use the fast path: do not run dependency installation or the catalog-wide `npm run verify` in the catalog checkout. Catalog-wide verification builds all three templates and belongs to catalog release/CI, not every customer build. If the source is not known to be CI-verified, run `npm ci --include=optional` and `npm run verify` at the catalog root before scaffolding. Run verification directly without piping its output through `tail`, `grep`, or another command that could hide the exit code.
+When the pinned commit is operator-approved and `catalogVerification` records that the exact ref is already verified by the operator or CI, use the fast path: do not run dependency installation or catalog-wide `npm run verify` in the catalog checkout. Catalog-wide verification builds all three templates and belongs to catalog release, not every customer build. If the source is not known to be verified, run `npm ci --include=optional` and `npm run verify` at the catalog root before scaffolding. Run verification directly without piping its output through `tail`, `grep`, or another command that could hide the exit code.
 
 Immediately after cloning, resolve and retain the catalog's absolute path. From that point on, every file read, Git command, package command, and script invocation must use that absolute path or an explicitly declared working directory. Before reading repository files, run the equivalent of:
 

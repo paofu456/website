@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { checkProductContent } from "./checks/check-content.mjs";
 import { checkLinks } from "./checks/check-links.mjs";
 import { checkOutputSafety } from "./checks/check-output-safety.mjs";
+import { checkReleaseContent } from "./checks/check-release-content.mjs";
 import { checkSeo } from "./checks/check-seo.mjs";
 import { readPages } from "./checks/shared.mjs";
 
@@ -28,6 +29,14 @@ const checks = [
 
 const siteConfig = fs.readFileSync(path.join(projectDirectory, "site.config.ts"), "utf8");
 const warnings = [];
+const contentIsReady = /contentStatus:\s*["']ready["']/.test(siteConfig);
+const releaseContentIssues = checkReleaseContent(projectDirectory, pages);
+
+if (contentIsReady) {
+  checks.push(["Release content", releaseContentIssues]);
+} else if (releaseContentIssues.length > 0) {
+  warnings.push(`${releaseContentIssues.length} starter/demo marker(s) remain; they become errors when contentStatus is ready`);
+}
 
 if (/contentStatus:\s*["']demo["']/.test(siteConfig)) {
   warnings.push("site.config.ts still marks content as demo");
@@ -38,7 +47,7 @@ if (/siteMode:\s*["']local["']/.test(siteConfig)) {
 
 if (deliveryMode) {
   const deliveryErrors = [];
-  if (!/contentStatus:\s*["']ready["']/.test(siteConfig)) deliveryErrors.push("contentStatus must be ready");
+  if (!contentIsReady) deliveryErrors.push("contentStatus must be ready");
   if (!/siteMode:\s*["']production["']/.test(siteConfig)) deliveryErrors.push("siteMode must be production");
   checks.push(["Delivery readiness", deliveryErrors]);
 }

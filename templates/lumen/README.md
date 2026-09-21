@@ -10,14 +10,15 @@ An Agent-friendly editorial company website built with Astro, Tailwind CSS, and 
 ## Commands
 
 ```bash
-npm install
+npm ci --include=optional
 npm run dev
 npm run build
+npm run verify:quick
 npm run verify
 npm run verify:handoff -- --owner <owner> --repo <customer-repo>
 ```
 
-Run `npm run verify:delivery` before handing a generated company site to a user. Delivery verification fails while the starter still contains demo content.
+Use `npm run verify` once for final local acceptance. When production delivery with a real canonical domain is in scope, run `npm run verify:delivery` instead; it includes the same build and checks plus release gates.
 
 ## Start a company website
 
@@ -27,7 +28,7 @@ Run `npm run verify:delivery` before handing a generated company site to a user.
 4. Replace public company facts in `src/data/company.json`.
 5. Replace demo product files and copy approved public media into `public/media/`.
 6. Set `contentStatus` in `site.config.ts` to `draft` while working and `ready` only after facts and assets are confirmed.
-7. Run `npm run verify:delivery` and review every public route at desktop width. Mobile adaptation is a separate scope unless the user explicitly requests it.
+7. Run `npm run verify:quick` after editing batches, then exactly one final `verify` or `verify:delivery` command and review every public route at desktop width. Mobile adaptation is a separate scope unless the user explicitly requests it.
 8. After Push, run `npm run verify:handoff -- --owner <owner> --repo <customer-repo>`; a local commit alone is not repository delivery.
 
 See `docs/content-contract.md` for the public content schema and `docs/verification.md` for automated checks.

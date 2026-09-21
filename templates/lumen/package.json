@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "verify:quick": "astro check",
     "verify": "npm run build && node scripts/verify.mjs",
     "verify:delivery": "npm run build && node scripts/verify.mjs --delivery",
     "verify:handoff": "node scripts/verify-handoff.mjs"

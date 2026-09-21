@@ -42,7 +42,7 @@ npm run install:agent-skills -- --target <agent-skills-directory>
 1. 如果对话中尚未收到资料，Agent 先请用户上传现有 PDF、Word、PPT、表格、Logo 和图片，然后等待；不要要求用户编造本地资料目录。
 2. 收到附件后使用运行时提供的真实附件路径。先完整消化资料，再一次性询问真正缺失的 P0 信息和公开授权。P0 未确认时不得创建项目或远程仓库。
 3. 客户附件、PDF 页面、OCR、联系表和 intake notes 必须位于运行时附件区或 catalog 外的客户任务工作区；禁止写入 catalog 的 `.tmp/`、`materials/` 或任何其他目录。
-4. P0 就绪后，外部 Agent 先用 `git ls-remote <catalog-url> HEAD` 检查运营方配置好的 SSH，再将 `website` catalog Clone 到自己的独立 workspace并检出运营方批准的 commit/tag。批准版本已通过 catalog CI 时，不在每个客户任务中重复根目录依赖安装和三模板全量验证；只有未经 CI 验证或正在维护 catalog 时，才运行 `npm ci --include=optional` 和 `npm run verify`。工作流验收测试即使在运营方本机运行，也不得复用运营方维护目录；只有用户明确指定可信现有 checkout 时才可复用。建站 Agent 不生成、复制 SSH 私钥或重写 `~/.ssh/config`。
+4. P0 就绪后，外部 Agent 先读取 Profile 根目录的非秘密 `site-builder.json`，用其中的 catalog URL、批准版本、Gitee owner 和 SSH host；任务输入可以覆盖这些默认值。再用 `git ls-remote <catalog-url> HEAD` 检查运营方配置好的 SSH，将 `website` catalog Clone 到自己的独立 workspace 并检出批准的 commit/tag。精确版本已由运营方或 CI 验证并标为 `operator-verified` 时，不在每个客户任务中重复根目录依赖安装和三模板全量验证；只有未经验证或正在维护 catalog 时，才运行 `npm ci --include=optional` 和 `npm run verify`。工作流验收测试即使在运营方本机运行，也不得复用运营方维护目录；只有用户明确指定可信现有 checkout 时才可复用。建站 Agent 不生成、复制 SSH 私钥或重写 `~/.ssh/config`。
 5. 按 `docs/onboarding.md` 选择一个模板，并从 catalog 运行：
 
    ```bash
@@ -54,7 +54,7 @@ npm run install:agent-skills -- --target <agent-skills-directory>
 6. 把原始资料和内部记录放到客户项目的 `materials/`、`notes/`；`materials/` 默认不进入 Git。
 7. 默认创建该客户的私有空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。只有用户明确要求仅本地输出时才可跳过，并必须称为本地草稿。
 8. 进入客户项目，读取 `AGENTS.md` 和 `skills/company-website/SKILL.md`。按内容契约直接替换数据、Markdown、素材和主题，不遍历阅读全部组件；只在具体布局需求或验证缺陷出现时读取相关页面或组件。
-9. 通过普通验证，执行并解释交付验证；默认只做约 1440px 桌面端 QA，移动端只有在用户明确加入范围时才检查。
+9. 编辑批次使用 `npm run verify:quick`；最终只构建一次：本地/不部署运行 `npm run verify`，生产交付运行 `npm run verify:delivery`。默认只做约 1440px 桌面端 QA，移动端只有在用户明确加入范围时才检查。
 10. 只暂存本次交付文件，Commit 后 Push 到客户仓库，再运行 `npm run verify:handoff -- --owner <owner> --repo <customer-repo>`。不得把客户内容推回基座。
 
 初始化示例：

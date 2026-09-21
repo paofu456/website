@@ -35,7 +35,7 @@ const galleryId = `gallery-${Math.random().toString(36).slice(2)}`;
           aria-pressed={index === 0 ? "true" : "false"}
           class="overflow-hidden rounded-xl border-2 border-transparent aria-pressed:border-[var(--color-primary)]"
         >
-          <img src={image.src} alt="" width="180" height="140" class="aspect-[4/3] h-auto w-full object-cover" />
+          <img src={image.src} alt="" aria-hidden="true" width="180" height="140" class="aspect-[4/3] h-auto w-full object-cover" />
         </button>
       ))}
     </div>
