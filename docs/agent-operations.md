@@ -10,7 +10,7 @@
 读取附件、提取事实、一次性补齐 P0 并确认公开授权
           ↓
 外部 Agent Clone 统一基座并固定批准的 commit/tag
-          ↓ 验证基座
+          ↓ 使用已通过 catalog CI 的版本
 选择 lumen / forge / nexus，create-site
           ↓ 在基座目录之外生成
 创建该客户的空远程仓库，初始化客户项目 Git
@@ -42,12 +42,14 @@ npm run install:agent-skills -- --target <agent-skills-directory>
 1. 如果对话中尚未收到资料，Agent 先请用户上传现有 PDF、Word、PPT、表格、Logo 和图片，然后等待；不要要求用户编造本地资料目录。
 2. 收到附件后使用运行时提供的真实附件路径。先完整消化资料，再一次性询问真正缺失的 P0 信息和公开授权。P0 未确认时不得创建项目或远程仓库。
 3. 客户附件、PDF 页面、OCR、联系表和 intake notes 必须位于运行时附件区或 catalog 外的客户任务工作区；禁止写入 catalog 的 `.tmp/`、`materials/` 或任何其他目录。
-4. P0 就绪后，外部 Agent 将 `website` catalog Clone 到自己的独立 workspace，检出运营方批准的 commit/tag，运行 `npm ci` 和 `npm run verify`。工作流验收测试即使在运营方本机运行，也不得复用运营方维护目录；只有用户明确指定可信现有 checkout 时才可复用。
+4. P0 就绪后，外部 Agent 先用 `git ls-remote <catalog-url> HEAD` 检查运营方配置好的 SSH，再将 `website` catalog Clone 到自己的独立 workspace并检出运营方批准的 commit/tag。批准版本已通过 catalog CI 时，不在每个客户任务中重复根目录依赖安装和三模板全量验证；只有未经 CI 验证或正在维护 catalog 时，才运行 `npm ci --include=optional` 和 `npm run verify`。工作流验收测试即使在运营方本机运行，也不得复用运营方维护目录；只有用户明确指定可信现有 checkout 时才可复用。建站 Agent 不生成、复制 SSH 私钥或重写 `~/.ssh/config`。
 5. 按 `docs/onboarding.md` 选择一个模板，并从 catalog 运行：
 
    ```bash
    npm run create-site -- --template <lumen|forge|nexus> --target <absolute-customer-project-path>
    ```
+
+   创建后进入客户项目，使用其锁文件执行一次 `npm ci --include=optional`。不要用多次 `npm install --no-save` 逐个补原生绑定。
 
 6. 把原始资料和内部记录放到客户项目的 `materials/`、`notes/`；`materials/` 默认不进入 Git。
 7. 默认创建该客户的私有空远程仓库。在客户项目中执行 `git init`，将客户仓库的 SSH 地址设置为 `origin`；不能把 catalog 的 `origin` 改成客户仓库。只有用户明确要求仅本地输出时才可跳过，并必须称为本地草稿。

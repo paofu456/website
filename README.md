@@ -13,7 +13,7 @@ All three templates use the same company data, product content, routes, Agent ru
 ## Install and verify the catalog
 
 ```bash
-npm install
+npm ci --include=optional
 npm run verify
 ```
 
@@ -31,7 +31,7 @@ After creation:
 
 ```bash
 cd ../acme-website
-npm install
+npm ci --include=optional
 npm run dev
 ```
 

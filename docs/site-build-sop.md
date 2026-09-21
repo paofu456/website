@@ -145,7 +145,14 @@ git clone <catalog-repository-url> website-catalog
 cd website-catalog
 git fetch origin --tags
 git checkout --detach <approved-tag-or-commit>
-npm ci
+```
+
+Clone 前先执行一次 `git ls-remote <catalog-repository-url> HEAD`。SSH 密钥和 `~/.ssh/config` 由运营环境管理；建站 Agent 不生成、不复制私钥，也不重写 SSH 配置。连接失败时原样报告错误并停止。
+
+批准 commit 已由 catalog CI 验证时，到这里直接创建客户项目，不在每个客户任务里再次安装根依赖或执行 catalog 全量 `npm run verify`。全量验证会构建三套模板，属于 catalog 发布/CI。只有来源尚未经过 CI 验证或正在维护 catalog 时，才在根目录执行：
+
+```bash
+npm ci --include=optional
 npm run verify
 ```
 
@@ -188,8 +195,10 @@ npm run create-site -- --template nexus --target ../client-website
 
 ```bash
 cd ../client-website
-npm install
+npm ci --include=optional
 ```
+
+客户项目依赖以自身锁文件为准。不要用多次 `npm install --no-save` 逐个修补 Linux 原生绑定；干净安装失败时保留真实退出码并先处理根因。
 
 ### 创建客户远程仓库并初始化 Git
 
@@ -353,7 +362,7 @@ public/media/  已确认可以公开、已经重命名和优化的素材
 
 ## 9. 阶段 G：小步验证
 
-每完成一个有意义的批次就执行：
+每完成一个有意义的完整批次就执行：
 
 ```bash
 npm run verify
@@ -368,7 +377,7 @@ npm run verify
 5. SEO；
 6. 最终修正。
 
-发现失败时立即修，不要积累到最后。错误必须按根因处理，不要删除检查脚本或降低校验标准。验证命令必须直接执行并保留真实退出码；禁止使用 `npm run verify 2>&1 | tail` 一类可能由最后一个管道命令掩盖失败的写法。
+发现失败时立即修，不要积累到最后，也不要在每个微小文本改动后重复全套验证。错误必须按根因处理，不要删除检查脚本或降低校验标准。验证命令必须直接执行并保留真实退出码；禁止使用 `npm run verify 2>&1 | tail` 一类可能由最后一个管道命令掩盖失败的写法。同一失败命令只可在完成明确修复后重试一次；再次失败就记录根因和未通过的门槛，停止重复安装—验证循环。
 
 ### 交付前文本搜索
 
@@ -410,7 +419,11 @@ rg -n -i "demo|starter|lorem|placeholder|模板演示公司名" src public site.
 
 ### 浏览器运行要求
 
-只启动一个由当前任务拥有的 Dev Server。逐一打开所有公开路由，检查 Console error/warning、失败的图片和网络请求、横向溢出、导航与 CTA。检查完成后只关闭本任务启动的服务。不要根据少量截图宣称所有页面已经检查。
+先批量检查全部公开路由的 HTTP 状态、标题和失败资源，再启动一个由当前任务拥有的 Dev Server。视觉检查只打开 `/`、`/products/`、一个代表性详情路由、`/about/` 和 `/contact/`；只有发现缺陷或用户明确要求时才扩展。检查 Console error/warning、失败的图片和网络请求、横向溢出、导航与 CTA。检查完成后只关闭本任务启动的服务。不要根据少量截图宣称所有页面已经检查。
+
+默认视觉阶段总时长限制为十分钟。浏览器操作超时时，只允许缩小为该路由的状态和布局检查后重试一次；再次超时就记录视觉验收未完成，不再无限重试。依赖安装、构建、验证和浏览器阶段开始前与结束后各输出一个简短检查点。
+
+普通本机 QA 只监听 loopback。只有用户明确要求局域网访问时才使用 `npm run dev -- --host 0.0.0.0`，并报告实际端口。主机防火墙、路由器和容器端口映射由运营方管理，不在建站流程中静默修改。
 
 对发现的共享组件问题，要搜索并检查所有使用位置。例如按钮出现白底白字时，应检查按钮组件的 variant 与调用方样式优先级，而不是只修当前页面。
 
@@ -512,7 +525,7 @@ npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
 - [ ] 公司联系方式只存在于统一数据源。
 - [ ] 公共图片都在 `public/media/` 且有 alt。
 - [ ] 空字段对应的区块已隐藏。
-- [ ] 我在每个重要批次后运行了 `npm run verify`。
+- [ ] 我在每个重要完整批次后运行了 `npm run verify`，且没有对同一失败无限重试。
 - [ ] 我检查了实际 viewport，而不是只看截图尺寸。
 - [ ] 我运行了 `npm run verify:delivery` 并正确解释结果。
 - [ ] Git 没有跟踪原始资料、依赖、构建物或临时文件。
