@@ -1,3 +1,7 @@
+# 执行顺序
+
+遵循 [统一流程](github-workflow.md)：先手册资料和阅读，再确认范围与模板，之后获取固定版本基座、生成独立项目、实现验收，最后新 GitHub 公开仓库交付。以下为实现细节。
+
 # 企业独立站构建 SOP（Agent 版）
 
 版本 v1.4 · 2026-09-17
@@ -131,8 +135,8 @@ Agent 服务器上的 catalog checkout
         ↓ 固定批准的 commit/tag
         ↓ create-site 选择一个模板
 客户独立站目录
-        ↓ 创建空客户仓库并初始化 Git
-        ↓ 修改、验证、Commit、Push
+        ↓ 初始化独立本地 Git
+        ↓ 修改、验证、创建新 GitHub 公开仓库、Commit、Push
 客户自己的 Git 仓库
 ```
 
@@ -147,7 +151,7 @@ git fetch origin --tags
 git checkout --detach <approved-tag-or-commit>
 ```
 
-Clone 前先执行一次 `git ls-remote <catalog-repository-url> HEAD`。SSH 密钥和 `~/.ssh/config` 由运营环境管理；建站 Agent 不生成、不复制私钥，也不重写 SSH 配置。连接失败时原样报告错误并停止。
+Clone 前先执行一次 `git ls-remote <catalog-repository-url> HEAD`。使用环境已有的 gh HTTPS 登录凭据，不在仓库中保存凭据。连接失败时区分认证与网络错误，不能据此判断仓库不存在。
 
 批准 commit 已由运营方或 catalog CI 验证，并在 Profile 的 `site-builder.json` 中把该精确版本标为 `operator-verified` 时，到这里直接创建客户项目，不在每个客户任务里再次安装根依赖或执行 catalog 全量 `npm run verify`。全量验证会构建三套模板，属于 catalog 发布。只有来源尚未验证或正在维护 catalog 时，才在根目录执行：
 
@@ -200,24 +204,9 @@ npm ci --include=optional
 
 客户项目依赖以自身锁文件为准。不要用多次 `npm install --no-save` 逐个修补 Linux 原生绑定；干净安装失败时保留真实退出码并先处理根因。
 
-### 创建客户远程仓库并初始化 Git
+### 本地初始化；验收后创建远程
 
-客户项目生成后、开始客户页面修改前，为它准备一个新的空远程仓库。SSH 只能 Clone 和 Push 已存在的仓库，不能创建 Gitee 仓库：
-
-- 任务已提供客户仓库时，直接使用其 SSH URL；
-- Agent 获得明确授权且运行环境提供 API Token/仓库创建工具时，先检查名称冲突，再创建空仓库；
-- 只配置 SSH 而仓库尚不存在时，必须由运营方或中央服务先创建，不能假装 Push 已完成；
-- Token 和 SSH 私钥不得写入项目、Skill、notes、日志或 Git。
-
-在客户项目中执行：
-
-```bash
-git init -b main
-git remote add origin <customer-repository-ssh-url>
-git remote -v
-```
-
-此时 `origin` 必须是客户仓库，不能指向 catalog。不要修改 catalog checkout 的 `origin`，也不要把 catalog 的 `.git` 目录复制到客户项目。
+生成项目后仅 git init -b main，origin 暂时缺失是正常状态。实现与验收后才创建 GitHub 新公开仓库、添加客户 HTTPS origin、Commit/Push 并验证。参见 [统一流程](github-workflow.md)。禁止推送客户代码回模板。
 
 在 `notes/requirements.md` 记录来源信息：
 
@@ -476,7 +465,7 @@ materials/
 .env*
 ```
 
-客户 Git 仓库和 `origin` 应在内容实现前初始化；只有项目通过普通验证后才能 Commit 和 Push。执行 `git status --short`，确认没有画册原件、临时截图、PDF 提取目录、依赖或构建产物进入提交。首次完整建站默认包含客户仓库创建与 Push，只有用户明确要求仅本地输出时才可跳过。
+内容实现前只初始化本地 Git；内容实现、项目验证及浏览器 QA 通过后，才创建新的 GitHub 仓库（默认公开）、配置 HTTPS origin、Commit 和 Push。执行 `git status --short`，确认没有画册原件、临时截图、PDF 提取目录、依赖或构建产物进入提交。首次完整建站默认包含客户仓库创建与 Push，只有用户明确要求仅本地输出时才可跳过。
 
 不要用 destructive Git 命令清理用户改动。遇到已有未提交修改时，先辨认所有权并绕开无关内容。
 
@@ -490,7 +479,7 @@ materials/
 Push 后执行：
 
 ```bash
-npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
+npm run verify:handoff -- --owner <github-owner> --repo <customer-repo>
 ```
 
 该命令未通过时，只能报告本地草稿或交付阻塞，不能报告仓库交付完成。
@@ -522,7 +511,7 @@ npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
 - [ ] 如果我是外部 Agent 或正在做工作流验收，我已在独立 workspace Clone 运营方基座并固定 source commit。
 - [ ] 我记录了 catalog URL、模板 ID 和 source commit。
 - [ ] 我在 catalog 外创建了独立客户目录。
-- [ ] 客户项目的 `origin` 是该客户仓库的 SSH URL，而不是 catalog。
+- [ ] 客户项目的 `origin` 是该客户仓库的 HTTPS URL，而不是 catalog。
 - [ ] 我读取了客户项目的 `AGENTS.md` 和 skill。
 - [ ] 我先提取资料，再询问缺口。
 - [ ] 我记录了公开授权范围。

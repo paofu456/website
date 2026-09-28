@@ -21,7 +21,7 @@ git -C <absolute-project-path> branch --show-current
 git -C <absolute-project-path> remote -v
 ```
 
-If `origin` is missing, points to the catalog, or the project contains unrelated uncommitted work, stop and resolve ownership before changing files. Do not infer a customer repository from a directory name. Use the SSH URL and owner supplied by bootstrap or the existing project's remote.
+For a first build, origin is intentionally absent until implementation and QA pass. Record the intended GitHub owner/name; create the default public customer repository only after verification using company-site-bootstrap. For an existing site, require its actual customer origin. Never edit with origin pointing to the catalog or overwrite unrelated work. HTTPS via saved gh authentication is supported.
 
 Raw inputs stay in `materials/`; internal facts and gaps stay in `notes/`; only authorized public assets go in `public/media/`. Keep user-confirmed facts, source-material facts, Agent inferences, and conflicts visibly separate. An inference is never confirmation.
 

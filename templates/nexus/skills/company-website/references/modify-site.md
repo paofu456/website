@@ -1,6 +1,6 @@
 # Modify an existing site
 
-Work from the existing customer's repository. If it is not present locally, clone its SSH URL directly; do not clone the catalog, run `create-site`, select another template, or replace the project history.
+Work from the existing customer's repository. If it is not present locally, clone its HTTPS URL directly; do not clone the catalog, run `create-site`, select another template, or replace the project history.
 
 Read `AGENTS.md`, inspect the relevant source files, then check `git status --short`, the current branch, and `git remote -v`. Preserve unrelated or uncommitted work. Fetch the existing remote when safe, but do not pull, switch branches, rewrite history, or change `origin` over dirty work without explicit direction.
 

@@ -1,8 +1,3 @@
----
-name: company-site-bootstrap
-description: 新建公司独立站时先读取公司产品手册，集中确认页面语言视觉询盘和模板，再从固定版本基座生成独立项目，验收后交付 GitHub 公开仓库。
----
-
 # First website: canonical workflow
 
 1. Materials first: ask for company/product brochures, PDF/Word/PPT/spreadsheets, logo and product images when none were provided, then wait. Read all relevant supplied materials before asking questions. Keep raw uploads, extraction and notes outside the catalog and public assets. Distinguish source facts, confirmed facts, inferences and conflicts; never claim unread pages were reviewed.

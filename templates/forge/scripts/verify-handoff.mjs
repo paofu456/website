@@ -18,9 +18,10 @@ function git(commandArgs) {
   return result.stdout.trim();
 }
 
-const owner = option("--owner") ?? process.env.GITEE_OWNER;
+const owner = option("--owner") ?? process.env.GITHUB_OWNER;
 const repository = option("--repo");
 const branch = option("--branch") ?? "main";
+const host = option("--host") ?? "github.com";
 
 if (!owner || !repository) {
   console.error("Usage: npm run verify:handoff -- --owner <owner> --repo <customer-repo> [--branch main]");
@@ -31,17 +32,20 @@ try {
   if (git(["rev-parse", "--is-inside-work-tree"]) !== "true") throw new Error("Not inside a Git worktree");
 
   const remote = git(["config", "--get", "remote.origin.url"]);
-  const scpStyle = remote.match(/^git@[^:]+:(.+)$/i);
+  const scpStyle = remote.match(/^git@([^:]+):(.+)$/i);
+  let remoteHost;
   let remotePath;
   if (scpStyle) {
-    remotePath = scpStyle[1];
-  } else if (/^ssh:\/\//i.test(remote)) {
+    remoteHost = scpStyle[1];
+    remotePath = scpStyle[2];
+  } else if (/^(?:ssh|https):\/\//i.test(remote)) {
+    remoteHost = new URL(remote).hostname;
     remotePath = new URL(remote).pathname;
   }
   const normalizedRemotePath = remotePath?.replace(/\\/g, "/").replace(/^\/+/, "").replace(/\.git$/i, "");
   const expectedPath = `${owner}/${repository}`.toLowerCase();
-  if (!normalizedRemotePath || normalizedRemotePath.toLowerCase() !== expectedPath) {
-    throw new Error(`origin is not the expected customer SSH repository: ${owner}/${repository}`);
+  if (remoteHost?.toLowerCase() !== host.toLowerCase() || !normalizedRemotePath || normalizedRemotePath.toLowerCase() !== expectedPath) {
+    throw new Error(`origin is not the expected customer repository: ${owner}/${repository}`);
   }
 
   const currentBranch = git(["branch", "--show-current"]);

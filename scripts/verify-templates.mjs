@@ -7,7 +7,6 @@ import { fileURLToPath } from "node:url";
 const catalogDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const templatesDirectory = path.join(catalogDirectory, "templates");
 const portableCompanyWebsiteSkill = path.join(catalogDirectory, "agent-skills", "company-website");
-const giteeRepositoryScript = path.join(catalogDirectory, "agent-skills", "company-site-bootstrap", "scripts", "create-gitee-repo.mjs");
 const forbiddenCatalogWorkspaces = [".tmp", "materials"];
 const templateIds = fs.readdirSync(templatesDirectory, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
@@ -15,11 +14,6 @@ const templateIds = fs.readdirSync(templatesDirectory, { withFileTypes: true })
   .sort();
 
 let failed = false;
-
-if (!fs.existsSync(giteeRepositoryScript)) {
-  console.error("[fail] company-site-bootstrap is missing scripts/create-gitee-repo.mjs");
-  failed = true;
-}
 
 for (const relative of forbiddenCatalogWorkspaces) {
   const candidate = path.join(catalogDirectory, relative);

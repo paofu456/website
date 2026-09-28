@@ -1,6 +1,6 @@
 # 首次客户建站执行手册
 
-本手册从模板已经复制为独立客户项目开始。默认目标是一个已验证并 Push 到客户私有仓库的桌面端 MVP；部署、域名、后台、CMS、数据库、在线表单和移动端专项适配不在默认范围。
+本手册从模板已经复制为独立客户项目开始。默认目标是一个已验证并 Push 到客户 GitHub 仓库（默认公开；用户明确要求时可改为私有）的桌面端 MVP；部署、域名、后台、CMS、数据库、在线表单和移动端专项适配不在默认范围。
 
 ## 1. 完成定义
 
@@ -150,7 +150,7 @@ npm run dev -- --host 0.0.0.0
 
 首次建站开始实现前，bootstrap 应已初始化 Git 并设置客户 `origin`。继续前确认：
 
-- `origin` 是客户仓库 SSH URL；
+- `origin` 是客户仓库 HTTPS URL；
 - `origin` 不指向 catalog；
 - 仓库所有者和客户仓库名正确；
 - `.gitignore` 排除 `materials/`、依赖、构建物、临时文件和环境变量。
@@ -164,7 +164,7 @@ npm run dev -- --host 0.0.0.0
 5. 运行：
 
 ```bash
-npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
+npm run verify:handoff -- --owner <github-owner> --repo <customer-repo>
 ```
 
 `verify:handoff` 未通过时，不得宣称 Push 或仓库交付完成。
@@ -173,9 +173,9 @@ npm run verify:handoff -- --owner <gitee-owner> --repo <customer-repo>
 
 最终回复必须给出：
 
-- catalog SSH URL、来源 commit 和模板 ID；
+- catalog HTTPS URL、来源 commit 和模板 ID；
 - 客户项目绝对路径；
-- 客户 Gitee 仓库 SSH 地址；
+- 客户 GitHub 仓库 HTTPS 地址；
 - 本地和远端一致的 commit；
 - 实际执行的最终验证命令及真实结果；未执行 production gate 时说明原因；
 - 实际检查过的桌面路由和尺寸；
